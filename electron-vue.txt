@@ -7,4 +7,83 @@ cd my-project
 yarn # 或者 npm install
 yarn run dev # 或者 npm run dev
 
+// 解决 progress not found
+// 找到 webpack.renderer.config.js / webpack.web.config.js 修改 HtmlWebpackPlugin 如下
 vue init simulatedgreg/electron-vue cute_unity_launcher
+
+new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: path.resolve(__dirname, '../src/index.ejs'),
+      templateParameters(compilation, assets, options) {
+        return {
+          compilation: compilation,
+          webpack: compilation.getStats().toJson(),
+          webpackConfig: compilation.options,
+          htmlWebpackPlugin: {
+            files: assets,
+            options: options
+          },
+          process,
+        };
+      },
+      minify: {
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+        removeComments: true
+      },
+      nodeModules: false
+}),
+
+
+
+build
+
+npm install electron-builder -g
+
+"build": {
+    "productName": "cute_launcher", // 项目名 exe名
+    "appId": "com.gameguo.cutelauncher",
+    "copyright": "gameguo",
+    "compression": "store", // store normal maximum  store相对较快
+    "asar": false,
+    "directories": {
+      "output": "build"
+    },
+    "extraResources": { // 拷贝dll等静态文件到指定位置
+      "from": "./app-update.yml",
+      "to": "./b.txt"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "icon": "app.ico",
+      "extraResources": {
+        "from": "./app-update.yml",
+        "to": "./b.txt"
+      },
+      "target": [
+        "nsis",
+        "zip"
+      ],
+      "arch": [
+        "ia32",
+        "x64"
+      ]
+    }
+    "nsis":{
+      "oneClick":false, // 一键安装
+      //"guid":"", // 注册表名 不推荐修改
+      "perMachine": true, // 是否开启安装时权限限制(此电脑或当前用户)
+      "allowElevation": true, // 允许请求提示。如果为false，则用户必须使用提升的权限重新启动安装程序
+      "allowToChangeInstallationDirectory": true, // 允许修改安装路径
+      "installerIcon": "./build/icons/aaa.ico", // 安装图标
+      "uninstallerIcon": "./build/icons/bbb.ico", // 卸载图标
+      "installerHeaderIcon": "./build/icons/aaa.ico", // 安装时头部图标
+      "createDesktopShortcut": true, //创建桌面图标
+      "createStartMenuShortcut": true, // 创建开始菜单图标
+      "shortcutName": "Cute Launcher" // 图标名称
+    }
