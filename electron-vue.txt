@@ -11,6 +11,8 @@ yarn run dev # 或者 npm run dev
 // 找到 webpack.renderer.config.js / webpack.web.config.js 修改 HtmlWebpackPlugin 如下
 vue init simulatedgreg/electron-vue cute_unity_launcher
 
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true' //取消警告
+
 new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, '../src/index.ejs'),
