@@ -13,6 +13,8 @@ const Multispinner = require('multispinner')
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
 const webConfig = require('./webpack.web.config')
+const path = require('path')
+const vue_build = require('./vue.build.js')
 
 const doneLog = chalk.bgGreen.white(' DONE ') + ' '
 const errorLog = chalk.bgRed.white(' ERROR ') + ' '
@@ -23,16 +25,16 @@ if (process.env.BUILD_TARGET === 'clean') clean()
 else if (process.env.BUILD_TARGET === 'web') web()
 else build()
 
-function clean () {
-  del.sync(['build/*', '!build/icons', '!build/icons/icon.*'])
+function clean() {
+  del.sync([path.join(vue_build.builds, '/*'), path.join('!' + vue_build.builds, vue_build.builds_icon), path.join('!' + vue_build.builds, vue_build.builds_icon, '/icon.*')])
   console.log(`\n${doneLog}\n`)
   process.exit()
 }
 
-function build () {
+function build() {
   greeting()
 
-  del.sync(['dist/electron/*', '!.gitkeep'])
+  del.sync([path.join(vue_build.output, '/electron/*'), '!.gitkeep'])
 
   const tasks = ['main', 'renderer']
   const m = new Multispinner(tasks, {
@@ -70,7 +72,7 @@ function build () {
   })
 }
 
-function pack (config) {
+function pack(config) {
   return new Promise((resolve, reject) => {
     config.mode = 'production'
     webpack(config, (err, stats) => {
@@ -82,10 +84,10 @@ function pack (config) {
           chunks: false,
           colors: true
         })
-        .split(/\r?\n/)
-        .forEach(line => {
-          err += `    ${line}\n`
-        })
+          .split(/\r?\n/)
+          .forEach(line => {
+            err += `    ${line}\n`
+          })
 
         reject(err)
       } else {
@@ -98,8 +100,8 @@ function pack (config) {
   })
 }
 
-function web () {
-  del.sync(['dist/web/*', '!.gitkeep'])
+function web() {
+  del.sync([path.join(vue_build.output, '/web/*'), '!.gitkeep'])
   webConfig.mode = 'production'
   webpack(webConfig, (err, stats) => {
     if (err || stats.hasErrors()) console.log(err)
@@ -113,7 +115,7 @@ function web () {
   })
 }
 
-function greeting () {
+function greeting() {
   const cols = process.stdout.columns
   let text = ''
 

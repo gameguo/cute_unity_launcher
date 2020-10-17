@@ -11,12 +11,13 @@ const webpackHotMiddleware = require('webpack-hot-middleware')
 
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
+const vue_build = require('./vue.build.js')
 
 let electronProcess = null
 let manualRestart = false
 let hotMiddleware
 
-function logStats (proc, data) {
+function logStats(proc, data) {
   let log = ''
 
   log += chalk.yellow.bold(`┏ ${proc} Process ${new Array((19 - proc.length) + 1).join('-')}`)
@@ -38,7 +39,7 @@ function logStats (proc, data) {
   console.log(log)
 }
 
-function startRenderer () {
+function startRenderer() {
   return new Promise((resolve, reject) => {
     rendererConfig.entry.renderer = [path.join(__dirname, 'dev-client')].concat(rendererConfig.entry.renderer)
     rendererConfig.mode = 'development'
@@ -64,7 +65,7 @@ function startRenderer () {
       {
         contentBase: path.join(__dirname, '../'),
         quiet: true,
-        before (app, ctx) {
+        before(app, ctx) {
           app.use(hotMiddleware)
           ctx.middleware.waitUntilValid(() => {
             resolve()
@@ -77,9 +78,9 @@ function startRenderer () {
   })
 }
 
-function startMain () {
+function startMain() {
   return new Promise((resolve, reject) => {
-    mainConfig.entry.main = [path.join(__dirname, '../src/main/index.dev.js')].concat(mainConfig.entry.main)
+    mainConfig.entry.main = [path.join(__dirname, '../', vue_build.src, '/main/index.dev.js')].concat(mainConfig.entry.main)
     mainConfig.mode = 'development'
     const compiler = webpack(mainConfig)
 
@@ -113,10 +114,10 @@ function startMain () {
   })
 }
 
-function startElectron () {
+function startElectron() {
   var args = [
     '--inspect=5858',
-    path.join(__dirname, '../dist/electron/main.js')
+    path.join(__dirname, '../', vue_build.output, '/electron/main.js')
   ]
 
   // detect yarn or npm and process commandline args accordingly
@@ -127,7 +128,7 @@ function startElectron () {
   }
 
   electronProcess = spawn(electron, args)
-  
+
   electronProcess.stdout.on('data', data => {
     electronLog(data, 'blue')
   })
@@ -140,7 +141,7 @@ function startElectron () {
   })
 }
 
-function electronLog (data, color) {
+function electronLog(data, color) {
   let log = ''
   data = data.toString().split(/\r?\n/)
   data.forEach(line => {
@@ -157,7 +158,7 @@ function electronLog (data, color) {
   }
 }
 
-function greeting () {
+function greeting() {
   const cols = process.stdout.columns
   let text = ''
 
@@ -175,7 +176,7 @@ function greeting () {
   console.log(chalk.blue('  getting ready...') + '\n')
 }
 
-function init () {
+function init() {
   greeting()
 
   Promise.all([startRenderer(), startMain()])

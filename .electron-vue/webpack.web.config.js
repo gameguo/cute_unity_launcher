@@ -10,11 +10,12 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
+const vue_build = require('./vue.build.js')
 
 let webConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
-    web: path.join(__dirname, '../src/renderer/main.js')
+    web: path.join(__dirname, '../', vue_build.src, '/renderer/main.js')
   },
   module: {
     rules: [
@@ -33,7 +34,7 @@ let webConfig = {
       {
         test: /\.js$/,
         use: 'babel-loader',
-        include: [path.resolve(__dirname, '../src/renderer')],
+        include: [path.resolve(__dirname, path.join('../', vue_build.src, '/renderer'))],
         exclude: /node_modules/
       },
       {
@@ -77,7 +78,7 @@ let webConfig = {
     new MiniCssExtractPlugin({ filename: 'styles.css' }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: path.resolve(__dirname, '../src/index.ejs'),
+      template: path.resolve(__dirname, path.join('../', vue_build.src, '/index.ejs')),
       templateParameters(compilation, assets, options) {
         return {
           compilation: compilation,
@@ -105,12 +106,12 @@ let webConfig = {
   ],
   output: {
     filename: '[name].js',
-    path: path.join(__dirname, '../dist/web')
+    path: path.join(__dirname, '../', vue_build.output, '/web')
   },
   resolve: {
     alias: {
-      '@': path.join(__dirname, '../src/renderer'),
-      'vue$': 'vue/dist/vue.esm.js'
+      '@': path.join(__dirname, '../', vue_build.src, '/renderer'),
+      'vue$': 'vue/build/vue.esm.js'
     },
     extensions: ['.js', '.vue', '.json', '.css']
   },
@@ -127,8 +128,8 @@ if (process.env.NODE_ENV === 'production') {
     new MinifyPlugin(),
     new CopyWebpackPlugin([
       {
-        from: path.join(__dirname, '../static'),
-        to: path.join(__dirname, '../dist/web/static'),
+        from: path.join(__dirname, '../', vue_build.static),
+        to: path.join(__dirname, '../', vue_build.output, '/web/', vue_build.static),
         ignore: ['.*']
       }
     ]),

@@ -8,9 +8,11 @@ const webpack = require('webpack')
 
 const MinifyPlugin = require("babel-minify-webpack-plugin")
 
+const vue_build = require('./vue.build.js')
+
 let mainConfig = {
   entry: {
-    main: path.join(__dirname, '../src/main/index.js')
+    main: path.join(__dirname, '../', vue_build.src, '/main/index.js')
   },
   externals: [
     ...Object.keys(dependencies || {})
@@ -35,7 +37,7 @@ let mainConfig = {
   output: {
     filename: '[name].js',
     libraryTarget: 'commonjs2',
-    path: path.join(__dirname, '../dist/electron')
+    path: path.join(__dirname, '../', vue_build.output, '/electron')
   },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin()
@@ -52,7 +54,7 @@ let mainConfig = {
 if (process.env.NODE_ENV !== 'production') {
   mainConfig.plugins.push(
     new webpack.DefinePlugin({
-      '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`
+      '__static': `"${path.join(__dirname, '../', vue_build.static).replace(/\\/g, '\\\\')}"`
     })
   )
 }

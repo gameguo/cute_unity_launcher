@@ -1,18 +1,25 @@
 # 安装 vue-cli 和 脚手架样板代码
 npm install -g vue-cli
 vue init simulatedgreg/electron-vue my-project
+vue init simulatedgreg/electron-vue cute_unity_launcher
 
 # 安装依赖并运行你的程序
 cd my-project
 yarn # 或者 npm install
 yarn run dev # 或者 npm run dev
 
-// 解决 progress not found
-// 找到 webpack.renderer.config.js / webpack.web.config.js 修改 HtmlWebpackPlugin 如下
-vue init simulatedgreg/electron-vue cute_unity_launcher
+
+Electron build 无法下载 winCodeSign 等资源
+将 7z 文件下载到 以下 cache 目录并解压
+macOS: ~/Library/Caches/electron-builder
+Linux: ~/.cache/electron-builder
+windows: %LOCALAPPDATA%\electron-builder\cache\winCodeSign\winCodeSign-2.4.0
+
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true' //取消警告
 
+// 解决 progress not found
+// 找到 webpack.renderer.config.js / webpack.web.config.js 修改 HtmlWebpackPlugin 如下
 new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, '../src/index.ejs'),

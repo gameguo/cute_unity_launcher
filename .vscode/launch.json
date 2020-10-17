@@ -12,7 +12,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\dist\\electron\\main.js",
+            "program": "${workspaceFolder}\\build\\electron\\main.js",
             "runtimeExecutable": "npm",
             "runtimeArgs": [
                 "run",
