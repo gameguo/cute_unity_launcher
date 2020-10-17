@@ -5,20 +5,53 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "启动程序",
+            "name": "Electron: Main",
             "type": "node",
             "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "skipFiles": [
-                "<node_internals>/**"
+            "protocol": "inspector",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+            "windows": {
+                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+            },
+            "preLaunchTask": "electron-debug",
+            "args": [
+                "--remote-debugging-port=9223",
+                "./build"
             ],
-            "program": "${workspaceFolder}\\build\\electron\\main.js",
+            "outFiles": [
+                "${workspaceFolder}/build/**/*.js"
+            ]
+        },
+        {
+            "name": "Electron: Renderer",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9223,
+            "urlFilter": "http://localhost:*",
+            "timeout": 30000,
+            "webRoot": "${workspaceFolder}/src",
+            "sourceMapPathOverrides": {
+                "webpack:///./src/*": "${webRoot}/*"
+            }
+        },
+        {
+            "name": "直接启动",
+            "type": "node",
+            "request": "launch",
             "runtimeExecutable": "npm",
             "runtimeArgs": [
                 "run",
-                "dev"
-            ],
-            "port": 5858
+                "start"
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Electron: All",
+            "configurations": [
+                "Electron: Main",
+                "Electron: Renderer"
+            ]
         }
     ]
 }

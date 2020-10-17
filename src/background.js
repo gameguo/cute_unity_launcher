@@ -2,7 +2,6 @@
 
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -65,7 +64,30 @@ app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
-      await installExtension(VUEJS_DEVTOOLS)
+      const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer')
+      var result = await installExtension(VUEJS_DEVTOOLS)
+
+      if (result) {
+        var _electron = require("electron")
+        var path = require("path")
+        var fs = require("fs")
+        var devtoolsPath = path.join(_electron.app.getPath('userData'), "/extensions", VUEJS_DEVTOOLS.id)
+        if (fs.existsSync(devtoolsPath)) {
+          var metadataPath = path.join(devtoolsPath, "_metadata")
+          if (fs.existsSync(metadataPath)) {
+            try {
+              var newMetadataPath = path.join(devtoolsPath, "metadata")
+              fs.renameSync(metadataPath, newMetadataPath)
+              console.log("success rename devtools !")
+            }
+            catch (err) {
+              console.log("rename error : " + err + ", oldName:" + metadataPath + " to newName:" + newMetadataPath)
+            }
+          }
+        } else {
+          console.log("devtoolsPath:" + devtoolsPath + " not found")
+        }
+      }
     } catch (e) {
       console.error('Vue Devtools failed to install:', e.toString())
     }
