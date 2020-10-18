@@ -2,6 +2,7 @@
 
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -18,7 +19,6 @@ function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    backgroundColor: '#ff0029',
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -28,9 +28,8 @@ function createWindow() {
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL).then(function () {
-      if (!process.env.IS_TEST) win.webContents.openDevTools()
-    })
+    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+    if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
@@ -66,17 +65,7 @@ app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
-      // VUEJS_DEVTOOLS ---- vue3 用不了
-      const { default: installExtension, } = require('electron-devtools-installer')
-      // 使用beta版 vue-devtools
-      // 参考链接 https://github.com/vuejs/vue-devtools/issues/1279
-      // https://v3.vuejs.org/guide/migration/introduction.html#devtools-extension
-      // https://chrome.google.com/webstore/detail/vuejs-devtools/ljjemllljcmogpfapbkkighbhhppjdbg
-      var vue_devtools_beta = { id: "ljjemllljcmogpfapbkkighbhhppjdbg", electron: ">=1.2.1" }
-      var result = await installExtension(vue_devtools_beta)
-      if (result) {
-        console.log("success load : " + result);
-      }
+      await installExtension(VUEJS_DEVTOOLS)
     } catch (e) {
       console.error('Vue Devtools failed to install:', e.toString())
     }
