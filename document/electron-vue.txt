@@ -5,6 +5,8 @@ vue create cute_unity_launcher
 cd my-project
 vue add electron-builder
 
+npm install element-ui -S  or  vue add element
+
 
 Electron build 无法下载 winCodeSign 等资源
 将 7z 文件下载到 以下 cache 目录并解压
