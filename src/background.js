@@ -66,29 +66,16 @@ app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
-      const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer')
-      var result = await installExtension(VUEJS_DEVTOOLS)
-
+      // VUEJS_DEVTOOLS ---- vue3 用不了
+      const { default: installExtension, } = require('electron-devtools-installer')
+      // 使用beta版 vue-devtools
+      // 参考链接 https://github.com/vuejs/vue-devtools/issues/1279
+      // https://v3.vuejs.org/guide/migration/introduction.html#devtools-extension
+      // https://chrome.google.com/webstore/detail/vuejs-devtools/ljjemllljcmogpfapbkkighbhhppjdbg
+      var vue_devtools_beta = { id: "ljjemllljcmogpfapbkkighbhhppjdbg", electron: ">=1.2.1" }
+      var result = await installExtension(vue_devtools_beta)
       if (result) {
-        var _electron = require("electron")
-        var path = require("path")
-        var fs = require("fs")
-        var devtoolsPath = path.join(_electron.app.getPath('userData'), "/extensions", VUEJS_DEVTOOLS.id)
-        if (fs.existsSync(devtoolsPath)) {
-          var metadataPath = path.join(devtoolsPath, "_metadata")
-          if (fs.existsSync(metadataPath)) {
-            try {
-              var newMetadataPath = path.join(devtoolsPath, "metadata")
-              fs.renameSync(metadataPath, newMetadataPath)
-              console.log("success rename devtools !")
-            }
-            catch (err) {
-              console.log("rename error : " + err + ", oldName:" + metadataPath + " to newName:" + newMetadataPath)
-            }
-          }
-        } else {
-          console.log("devtoolsPath:" + devtoolsPath + " not found")
-        }
+        console.log("success load : " + result);
       }
     } catch (e) {
       console.error('Vue Devtools failed to install:', e.toString())
