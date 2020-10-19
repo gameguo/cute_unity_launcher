@@ -14,9 +14,6 @@ macOS: ~/Library/Caches/electron-builder
 Linux: ~/.cache/electron-builder
 windows: %LOCALAPPDATA%\electron-builder\cache\winCodeSign\winCodeSign-2.4.0
 
-devtools扩展错误：
-ExtensionLoadWarning: Warnings loading extension at C:\Users\guo\AppData\Roaming\cute_unity_launcher\extensions\nhdogjmejiglipccpnnnanhbledajbpd: Unrecognized manifest key 'browser_action'. Unrecognized manifest key 'update_url'. Permission 'contextMenus' is unknown or URL pattern is malformed. Cannot load extension with file or directory name _metadata. Filenames starting with "_" are reserved for use by the system.
-
 Yarn 淘宝源安装
 yarn config set registry https://registry.npm.taobao.org -g
 yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g

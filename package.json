@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "npm run electron:build",
-    "electron:build": "vue-cli-service electron:build",
-    "electron:serve": "vue-cli-service electron:serve",
-    "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps",
     "start": "npm run electron:serve",
+    "build": "npm run electron:build",
     "web:build": "vue-cli-service build",
     "web:serve": "vue-cli-service serve",
     "webbuild": "npm run web:build",
-    "webstart": "npm run web:serve"
+    "webstart": "npm run web:serve",
+    "electron:build": "vue-cli-service electron:build",
+    "electron:serve": "vue-cli-service electron:serve",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
   },
   "main": "background.js",
   "dependencies": {
