@@ -1,4 +1,6 @@
 module.exports = {
+    // https://nklayman.github.io/vue-cli-plugin-electron-builder/
+
     // 如果您不希望将文件输出到dist_electron中，则可以在VCPEB的插件选项中选择一个自定义文件夹。您也可以使用--dest参数来更改输出目录
     // 注意：建议将新目录添加到您的.gitignore文件中。
     outputDir: 'build',
@@ -18,7 +20,7 @@ module.exports = {
             // app: "app" //应用程序目录（包含应用程序的package.json），默认为app，www或工作目录
         },
         win: { // https://www.electron.build/configuration/win
-            "icon": "builds_resources/icons/icon.ico", // 应用程序图标的路径。
+            "icon": "build_assets/icons/icon.ico", // 应用程序图标的路径。
             target: [
                 {
                     // 目标封装类型
@@ -32,14 +34,14 @@ module.exports = {
             ]
         },
         mac: { // https://www.electron.build/configuration/mac
-            icon: "builds_resources/icons/icon.icns",
+            icon: "build_assets/icons/icon.icns",
             // string | TargetConfiguration
             // 目标封装类型：列表default，dmg，mas，mas-dev，pkg，7z，zip，tar.xz，tar.lz，tar.gz，tar.bz2，dir。
             // 默认为default（对于Squirrel.Mac，为dmg和zip）
             target: "dmg"
         },
         linux: { // https://www.electron.build/configuration/linux
-            "icon": "builds_resources/icons",
+            "icon": "build_assets/icons",
             // 目标封装类型 列表AppImage, snap, deb, rpm, freebsd, pacman, p5p, apk, 7z, zip, tar.xz, tar.lz, tar.gz, tar.bz2, dir
             target: "AppImage"
         },
@@ -87,5 +89,27 @@ module.exports = {
         //     from: "./app-update.yml",
         //     to: "./b.txt"
         // },
-    }
+    },
+    chainWebpackMainProcess: (config) => {
+        // Chain webpack config for electron main process only
+    },
+    chainWebpackRendererProcess: (config) => {
+        // Chain webpack config for electron renderer process only
+        // The following example will set IS_ELECTRON to true in your app
+        // config.plugin('define').tap((args) => {
+        //   args[0]['IS_ELECTRON'] = true
+        //   return args
+        // })
+    },
+    // Use this to change the entrypoint of your app's main process
+    mainProcessFile: 'src/main/background.js',
+    // // Provide an array of files that, when changed, will recompile the main process and restart Electron
+    // // Your main process file will be added by default
+    // mainProcessWatch: ['src/myFile1', 'src/myFile2'],
+
+    // // Provide a list of arguments that Electron will be launched with during "electron:serve",
+    // // which can be accessed from the main process (src/background.js).
+    // // Note that it is ignored when --debug flag is used with "electron:serve", as you must launch Electron yourself
+    // // Command line args (excluding --debug, --dashboard, and --headless) are passed to Electron as well
+    // mainProcessArgs: ['--arg-name', 'arg-value']
 }
