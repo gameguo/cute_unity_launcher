@@ -4,6 +4,10 @@ module.exports = {
     // 如果您不希望将文件输出到dist_electron中，则可以在VCPEB的插件选项中选择一个自定义文件夹。您也可以使用--dest参数来更改输出目录
     // 注意：建议将新目录添加到您的.gitignore文件中。
     outputDir: 'build',
+    nodeIntegration: false, // 如果您需要在fs或sqlite渲染器过程中使用本机模块
+    preload: 'src/preload/preload.js',
+    // // Or, for multiple preload files:
+    // preload: { preload: 'src/preload.js', otherPreload: 'src/preload2.js' }
     // removeElectronJunk: false, // 删除ElectronJunk输出
     builderOptions: {
         // options placed here will be merged with default configuration and passed to electron-builder

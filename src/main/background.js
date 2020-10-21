@@ -1,8 +1,8 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcRenderer } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import "./main"
+const path = require("path")
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -24,7 +24,8 @@ function createWindow() {
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      preload: path.join(__dirname, 'preload.js')
     }
   })
 
@@ -41,6 +42,13 @@ function createWindow() {
   win.on('closed', () => {
     win = null
   })
+
+  console.rendererlog = function (log) {
+    win.webContents.send('console.log', log)
+  }
+
+  var { default: main } = require("./main")
+  main(win)
 }
 
 // Quit when all windows are closed.

@@ -14,3 +14,7 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+window.ipcRenderer.on('console.log', (event, arg) => {
+  console.log(arg)
+})
