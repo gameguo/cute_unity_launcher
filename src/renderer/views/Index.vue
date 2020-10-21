@@ -1,10 +1,37 @@
 <template>
   <div id="index">
     <el-container>
-      <el-header class="titlebar">Header</el-header>
+      <el-header class="titlebar" style="height: 40px">
+        <span class="titleSpan">Cute Launcher</span>
+      </el-header>
       <el-container>
-        <el-aside width="200px">Left</el-aside>
-        <el-main>Main</el-main>
+        <el-aside width="200px">
+          <el-col>
+            <el-menu
+              default-active="0"
+              class="el-menu-vertical-demo"
+              @open="handleOpen"
+              @close="handleClose"
+            >
+              <el-menu-item index="0">
+                <i class="el-icon-menu"></i>
+                <span slot="title">项目</span>
+              </el-menu-item>
+              <el-menu-item index="1">
+                <i class="el-icon-setting"></i>
+                <span slot="title">编辑器</span>
+              </el-menu-item>
+              <el-menu-item index="2">
+                <i class="el-icon-setting"></i>
+                <span slot="title">设置</span>
+              </el-menu-item>
+            </el-menu>
+          </el-col>
+        </el-aside>
+        <el-container>
+          <el-main>Main</el-main>
+          <el-footer>Footer</el-footer>
+        </el-container>
       </el-container>
     </el-container>
   </div>
@@ -13,30 +40,41 @@
 <script>
 export default {
   name: "Index",
+  methods: {
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
+    },
+  },
 };
 </script>
 
 <style>
+.titleSpan {
+  color: rgb(239, 29, 94);
+  font-size: 20px;
+}
 .titlebar {
   -webkit-app-region: drag;
 }
 .el-header,
 .el-footer {
-  background-color: #b3c0d1;
-  color: #333;
+  background-color: #ffffff;
   text-align: center;
-  line-height: 60px;
+  line-height: 40px;
 }
 
 .el-aside {
-  background-color: #d3dce6;
+  background-color: #ffffff;
   color: #333;
   text-align: center;
   line-height: 200px;
 }
 
 .el-main {
-  background-color: #e9eef3;
+  background-color: #ffffff;
   color: #333;
   text-align: center;
   line-height: 160px;
