@@ -1,7 +1,7 @@
 <template>
   <div id="index">
     <el-container>
-      <el-header>Header</el-header>
+      <el-header class="titlebar">Header</el-header>
       <el-container>
         <el-aside width="200px">Left</el-aside>
         <el-main>Main</el-main>
@@ -17,6 +17,9 @@ export default {
 </script>
 
 <style>
+.titlebar {
+  -webkit-app-region: drag;
+}
 .el-header,
 .el-footer {
   background-color: #b3c0d1;

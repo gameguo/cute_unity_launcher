@@ -13,7 +13,7 @@ module.exports = {
         // options placed here will be merged with default configuration and passed to electron-builder
         // https://www.electron.build/configuration/configuration
         appId: "com.gameguo.cuteunitylauncher", // 包名
-        productName: "cute_unity_launcher", // 项目名 exe名 其中包含名称属性中不允许的空格和其他特殊字符
+        productName: "Cute Launcher", // 项目名 exe名 其中包含名称属性中不允许的空格和其他特殊字符
         copyright: "Copyright © 2020 gameguo", // 版权
         compression: "maximum", // store normal maximum  store相对较快
         asar: false,
@@ -88,10 +88,10 @@ module.exports = {
         },
         // removePackageScripts: true, // 是否从package.json文件中删除scripts字段
         // electronVersion: "", // 您要包装的版本 默认为版本electron，electron-prebuilt或electron-prebuilt-compile依赖
-        //files: [],
+        // files: ["./resources/icon.ico"],
         // extraResources: { // 拷贝dll等静态文件到指定位置
-        //     from: "./app-update.yml",
-        //     to: "./b.txt"
+        //     from: "./resources/icon.ico",
+        //     to: "./resources/icon.ico"
         // },
     },
     chainWebpackMainProcess: (config) => {

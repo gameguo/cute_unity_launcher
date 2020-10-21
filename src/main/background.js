@@ -1,14 +1,17 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcRenderer } from 'electron'
+import { app, protocol, BrowserWindow, Tray, Menu, dialog } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 const path = require("path")
+const { default: main } = require("./main")
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
+const applicationName = "Cute Launcher"
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+let win, tray
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -18,9 +21,15 @@ protocol.registerSchemesAsPrivileged([
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    backgroundColor: "#EF1D5E",
-    width: 800,
-    height: 600,
+    backgroundColor: "#ffffff",
+    width: 940,
+    height: 630,
+    "center": true,
+    "minWidth": 600,//窗口的最小宽度，单位: 像素值,
+    "minHeight": 400,//窗口的最小高度，单位: 像素值,
+    "title": applicationName,
+    // titleBarStyle: 'hidden',
+    // frame: false,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -28,11 +37,14 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js')
     }
   })
+  win.setMenu(null)
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL).then(function () {
+      if (!process.env.IS_TEST) win.webContents.openDevTools()
+      main(win)
+    })
   } else {
     createProtocol('app')
     // Load the index.html when not in development
@@ -42,13 +54,55 @@ function createWindow() {
   win.on('closed', () => {
     win = null
   })
+  win.on('close', (e) => {
+    e.preventDefault()
+    win.hide();
+    // win.setSkipTaskbar(true);
+  })
 
-  console.rendererlog = function (log) {
-    win.webContents.send('console.log', log)
-  }
+  initTrayIcon()
+}
 
-  var { default: main } = require("./main")
-  main(win)
+function initTrayIcon() {
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: '显示',
+      click: function () {
+        win.show();
+      } //打开相应页面
+    },
+    {
+      label: '关于',
+      click: function () {
+        dialog.showMessageBox({
+          title: "关于",
+          message: applicationName + " - " + process.env.npm_package_version + " - gameguo\nhttps://github.com/gameguo",
+          buttons: ["确定"],
+          noLink: true,
+          type: "info",
+          cancelId: 0,
+        })
+      }
+    },
+    {
+      label: '退出',
+      click: function () {
+        win.destroy();
+        win = null;
+        app.quit();
+      }
+    }
+  ])
+  tray = new Tray(path.join(__static, 'icon.ico'))
+  //设置此托盘图标的悬停提示内容
+  tray.setToolTip('Cute Launcher')
+  //设置此图标的上下文菜单
+  tray.setContextMenu(contextMenu)
+  //单击右下角小图标显示应用
+  tray.on('click', function () {
+    win.show();
+  })
+
 }
 
 // Quit when all windows are closed.
