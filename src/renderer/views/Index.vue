@@ -2,7 +2,11 @@
   <div id="index">
     <el-container>
       <el-header height="40px">
-        <img src="@/renderer/assets/logo.png" align="absmiddle" />
+        <img
+          src="@/renderer/assets/logo.png"
+          draggable="false"
+          align="absmiddle"
+        />
         <span class="headTitle">Cute Launcher</span>
         <el-button class="headClick" type="text" @click="githubClick()"
           >github</el-button
@@ -11,20 +15,21 @@
       <el-container>
         <el-aside width="180px">
           <el-col>
+            <!-- @select="handleSelect" -->
             <el-menu
-              default-active="0"
+              default-active="/project"
               class="el-menu-vertical-demo"
-              @select="handleSelect"
+              router
             >
-              <el-menu-item index="0">
+              <el-menu-item index="/project">
                 <i class="el-icon-folder"></i>
                 <span slot="title">项目</span>
               </el-menu-item>
-              <el-menu-item index="1">
+              <el-menu-item index="/editor">
                 <i class="el-icon-menu"></i>
                 <span slot="title">编辑器</span>
               </el-menu-item>
-              <el-menu-item index="2">
+              <el-menu-item index="/setting">
                 <i class="el-icon-setting"></i>
                 <span slot="title">设置</span>
               </el-menu-item>
@@ -32,7 +37,7 @@
           </el-col>
         </el-aside>
         <el-container>
-          <el-main>Main</el-main>
+          <el-main><router-view /></el-main>
         </el-container>
       </el-container>
     </el-container>
@@ -43,9 +48,6 @@
 export default {
   name: "Index",
   methods: {
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
-    },
     githubClick() {
       window.remote.shell.openExternal(
         "https://github.com/gameguo/cute_unity_launcher"
@@ -76,22 +78,23 @@ export default {
   -webkit-app-region: drag;
   background-color: #ffffff;
   /* -webkit-app-region: drag; */
-  margin-bottom: 10px;
+  z-index: 10;
 }
 
 .el-aside {
   background-color: #ffffff;
   text-align: left;
-  /* line-height: 200px; */
+  box-shadow: 0 2px 12px rgba(224, 224, 224, 0.12),
+    0 0 6px rgba(56, 56, 56, 0.1);
+  z-index: 5;
 }
 .el-menu-item [class^="el-icon-"] {
   margin-left: 10px;
 }
 
 .el-main {
-  background-color: #dfb3b3;
+  background-color: #f2f3f4;
   text-align: center;
-  /* line-height: 160px; */
 }
 
 #index,
