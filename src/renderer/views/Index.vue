@@ -1,11 +1,12 @@
 <template>
   <div id="index">
     <el-container>
-      <el-header class="titlebar" style="height: 40px">
-        <span class="titleSpan">Cute Launcher</span>
+      <el-header height="40px">
+        <img src="@/renderer/assets/logo.png" align="absmiddle" />
+        <span> Cute Launcher</span>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="180px">
           <el-col>
             <el-menu
               default-active="0"
@@ -14,11 +15,11 @@
               @close="handleClose"
             >
               <el-menu-item index="0">
-                <i class="el-icon-menu"></i>
+                <i class="el-icon-folder"></i>
                 <span slot="title">项目</span>
               </el-menu-item>
               <el-menu-item index="1">
-                <i class="el-icon-setting"></i>
+                <i class="el-icon-menu"></i>
                 <span slot="title">编辑器</span>
               </el-menu-item>
               <el-menu-item index="2">
@@ -30,7 +31,6 @@
         </el-aside>
         <el-container>
           <el-main>Main</el-main>
-          <el-footer>Footer</el-footer>
         </el-container>
       </el-container>
     </el-container>
@@ -52,44 +52,42 @@ export default {
 </script>
 
 <style>
-.titleSpan {
-  color: rgb(239, 29, 94);
-  font-size: 20px;
-}
-.titlebar {
-  -webkit-app-region: drag;
-}
-.el-header,
-.el-footer {
-  background-color: #ffffff;
+.el-header span {
   text-align: center;
-  line-height: 40px;
+  font-weight: 500;
+  color: #000000;
+  line-height: 30px;
+}
+.el-header img {
+  height: 90%;
+}
+.el-header {
+  /* border-radius: 30px; */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.1);
+  -webkit-app-region: drag;
+  background-color: #ffffff;
+  /* -webkit-app-region: drag; */
+  margin-bottom: 10px;
 }
 
 .el-aside {
   background-color: #ffffff;
-  color: #333;
-  text-align: center;
-  line-height: 200px;
+  text-align: left;
+  /* line-height: 200px; */
+}
+.el-menu-item [class^="el-icon-"] {
+  margin-left: 10px;
 }
 
 .el-main {
-  background-color: #ffffff;
-  color: #333;
+  background-color: #dfb3b3;
   text-align: center;
-  line-height: 160px;
+  /* line-height: 160px; */
 }
 
-body > .el-container {
-  margin-bottom: 40px;
-}
-
-.el-container:nth-child(5) .el-aside,
-.el-container:nth-child(6) .el-aside {
-  line-height: 260px;
-}
-
-.el-container:nth-child(7) .el-aside {
-  line-height: 320px;
+#index,
+.el-container {
+  width: 100%;
+  height: 100%;
 }
 </style>
