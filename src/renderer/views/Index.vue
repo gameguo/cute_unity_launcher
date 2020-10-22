@@ -3,7 +3,10 @@
     <el-container>
       <el-header height="40px">
         <img src="@/renderer/assets/logo.png" align="absmiddle" />
-        <span> Cute Launcher</span>
+        <span class="headTitle">Cute Launcher</span>
+        <el-button class="headClick" type="text" @click="githubClick()"
+          >github</el-button
+        >
       </el-header>
       <el-container>
         <el-aside width="180px">
@@ -11,8 +14,7 @@
             <el-menu
               default-active="0"
               class="el-menu-vertical-demo"
-              @open="handleOpen"
-              @close="handleClose"
+              @select="handleSelect"
             >
               <el-menu-item index="0">
                 <i class="el-icon-folder"></i>
@@ -41,18 +43,25 @@
 export default {
   name: "Index",
   methods: {
-    handleOpen(key, keyPath) {
+    handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
+    githubClick() {
+      window.remote.shell.openExternal(
+        "https://github.com/gameguo/cute_unity_launcher"
+      );
     },
   },
 };
 </script>
 
 <style>
-.el-header span {
+.el-header .headClick {
+  float: right;
+  height: 30px;
+  color: #000000;
+}
+.el-header .headTitle {
   text-align: center;
   font-weight: 500;
   color: #000000;

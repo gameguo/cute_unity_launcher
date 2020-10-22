@@ -22,12 +22,12 @@ window.ipcRenderer.on('console.log', (event, arg) => {
 window.ipcRenderer.on('platform', (event, arg) => {
   let platform = arg;
   if (platform == "darwin") {
-    // console.log("这是mac系统");
+    console.log("这是mac系统");
   }
   if (platform == "win32") {
-    // console.log("这是windows系统");
+    console.log("这是windows系统");
   }
   if (platform == "linux") {
-    // console.log("这是linux系统");
+    console.log("这是linux系统");
   }
 })
