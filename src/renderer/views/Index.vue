@@ -8,9 +8,21 @@
           align="absmiddle"
         />
         <span class="headTitle">Cute Launcher</span>
-        <el-button class="headClick" type="text" @click="githubClick()"
-          >github</el-button
+        <el-popover
+          placement="top-start"
+          width="100"
+          trigger="hover"
+          content="open cute for github"
         >
+          <!-- <el-button slot="reference">hover 激活</el-button> -->
+          <el-button
+            slot="reference"
+            class="headClick"
+            type="text"
+            @click="githubClick()"
+            >github</el-button
+          >
+        </el-popover>
       </el-header>
       <el-container>
         <el-aside width="180px">
@@ -37,7 +49,7 @@
           </el-col>
         </el-aside>
         <el-container>
-          <el-main><router-view /></el-main>
+          <el-main id="main"><router-view /></el-main>
         </el-container>
       </el-container>
     </el-container>
@@ -92,9 +104,10 @@ export default {
   margin-left: 10px;
 }
 
-.el-main {
+#main {
   background-color: #f2f3f4;
   text-align: center;
+  padding: 0px;
 }
 
 #index,
