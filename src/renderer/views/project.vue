@@ -1,7 +1,15 @@
 <template>
   <div class="flexContainer">
     <div class="contentTitle">项目</div>
-    <el-table :data="tableData" :height="tableHeight" id="projectTable" border>
+    <el-table
+      :data="tableData"
+      border
+      :height="tableHeight"
+      :width="tableWidth"
+      :row-style="{ height: '40px' }"
+      :cell-style="{ padding: '0px' }"
+      id="projectTable"
+    >
       <el-table-column prop="date" label="日期" width="180"> </el-table-column>
       <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
       <el-table-column prop="address" label="地址"> </el-table-column>
@@ -24,7 +32,8 @@
   font-size: 20px;
 }
 #projectTable {
-  padding-right: 20px;
+  padding-left: 2px;
+  padding-right: 22px;
   margin: 20px;
 }
 </style>
@@ -33,11 +42,15 @@
 export default {
   name: "project",
   methods: {
+    getWidth: function () {
+      return document.body.clientWidth - 180 + "px";
+    },
     getHeight: function () {
       return document.body.clientHeight - 120 + "px";
     },
     setHeight: function () {
       this.tableHeight = this.getHeight();
+      this.tableWidth = this.getWidth();
     },
     getTableData: function () {
       return [
@@ -55,12 +68,15 @@ export default {
     window.onresize = () => {
       return (() => {
         window.screenHeight = document.body.clientHeight;
+        window.screenWidth = document.body.clientWidth;
         this.setHeight();
+        this.getWidth();
       })();
     };
   },
   data() {
     return {
+      tableWidth: this.getWidth(),
       tableHeight: this.getHeight(),
       tableData: this.getTableData(),
     };
