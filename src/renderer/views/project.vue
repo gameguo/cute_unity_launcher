@@ -12,6 +12,9 @@
           <div class="operation"></div>
         </div>
       </header>
+      <section>
+        <div class="row-item">row-items</div>
+      </section>
     </div>
     <footer>
       <div class="contentBottom"></div>
@@ -21,15 +24,21 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.contentContent section {
+  flex: 1;
+  background-color: chocolate;
+  margin: 0 10px;
+}
+.contentContent header {
+  height: 40px;
+  margin: 10px;
+  background-color: blueviolet;
+}
 .contentContent .row {
   padding: 0 10px;
   white-space: nowrap;
-  margin: 10px;
   display: flex;
   line-height: 40px;
-  z-index: 100;
-  background-color: blueviolet;
-  height: 40px;
   cursor: pointer;
 }
 .contentContent .name {

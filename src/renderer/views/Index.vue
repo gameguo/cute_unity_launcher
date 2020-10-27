@@ -2,12 +2,8 @@
   <div id="index">
     <el-container>
       <el-header height="40px">
-        <img
-          src="@/renderer/assets/logo.png"
-          draggable="false"
-          align="absmiddle"
-        />
-        <span class="headTitle">Cute Launcher</span>
+        <img src="@/renderer/assets/logo.png" draggable="false" />
+        <div class="headTitle">Cute Launcher</div>
         <el-popover
           placement="top-start"
           width="100"
@@ -82,6 +78,10 @@ export default {
   font-weight: 500;
   color: #000000;
   line-height: 30px;
+  white-space: nowrap;
+  position: absolute;
+  left: 60px;
+  top: 0px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
