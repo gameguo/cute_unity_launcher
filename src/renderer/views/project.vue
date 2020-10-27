@@ -4,17 +4,33 @@
       <div class="contentTitle">项目</div>
     </header>
     <div class="contentContent">
-      <header>
-        <div class="row">
-          <div class="name">项目名称</div>
-          <div class="version">编辑器版本</div>
-          <div class="mtime">最后打开</div>
-          <div class="operation"></div>
-        </div>
-      </header>
-      <section>
-        <div class="row-item">row-items</div>
-      </section>
+      <div class="row-item">
+        <el-table
+          :data="tableData"
+          @cell-click="rowClick"
+          height="100%"
+          style="width: 100%"
+          :cell-style="rowStyle"
+          :cell-class-name="getCellIndex"
+        >
+          <el-table-column
+            show-overflow-tooltip
+            prop="name"
+            label="项目名称"
+          ></el-table-column>
+          <el-table-column prop="version" label="编辑器版本" width="150">
+          </el-table-column>
+          <el-table-column prop="mtime" label="最后打开" width="140">
+          </el-table-column>
+          <el-table-column prop="menu" label="" scoped-slot width="60">
+            <template>
+              <div style="text-overflow: clip">
+                <el-button size="mini" icon="el-icon-more" round></el-button>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </div>
     <footer>
       <div class="contentBottom"></div>
@@ -24,42 +40,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.contentContent section {
-  flex: 1;
-  background-color: chocolate;
-  margin: 0 10px;
+.contentContent .row-item {
+  position: absolute;
+  width: 100%;
+  height: calc(100%);
 }
-.contentContent header {
-  height: 40px;
-  margin: 10px;
-  background-color: blueviolet;
-}
-.contentContent .row {
-  padding: 0 10px;
-  white-space: nowrap;
-  display: flex;
-  line-height: 40px;
-  cursor: pointer;
-}
-.contentContent .name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
-}
-.contentContent .version {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 160px;
-}
-.contentContent .mtime {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 160px;
-}
-.contentContent .operation {
-  width: 50px;
-}
-
 .flexContainer {
   display: flex;
   flex-direction: column;
@@ -78,6 +63,7 @@
   text-overflow: ellipsis;
 }
 .contentContent {
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -96,33 +82,91 @@
 export default {
   name: "project",
   methods: {
-    getWidth: function () {
-      return document.body.clientWidth - 180 + "px";
+    rowStyle({ row, column, rowIndex, columnIndex }) {
+      var style = "";
+      if (columnIndex < this.handleIndex) {
+        return style + "cursor:pointer";
+      } else {
+        return style;
+      }
     },
-    getHeight: function () {
-      return document.body.clientHeight - 120 + "px";
+    getCellIndex({ row, column, rowIndex, columnIndex }) {
+      row.index = rowIndex;
+      column.index = columnIndex;
     },
-    setHeight: function () {
-      this.tableHeight = this.getHeight();
-      this.tableWidth = this.getWidth();
+    rowClick(row, column, cell, event) {
+      if (column.index >= this.handleIndex) return;
+      console.log(row);
+      // console.log(row.name, row);
     },
   },
   mounted() {
-    this.setHeight();
-    const that = this;
-    window.onresize = () => {
-      return (() => {
-        window.screenHeight = document.body.clientHeight;
-        window.screenWidth = document.body.clientWidth;
-        this.setHeight();
-        this.getWidth();
-      })();
-    };
+    this.handleIndex = 3;
   },
   data() {
     return {
-      tableWidth: this.getWidth(),
-      tableHeight: this.getHeight(),
+      tableData: [
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+        {
+          name: "testProjectName",
+          version: "2019.4.10f1",
+          mtime: "1天前",
+        },
+      ],
     };
   },
 };
