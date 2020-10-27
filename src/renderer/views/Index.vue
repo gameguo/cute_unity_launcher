@@ -25,7 +25,7 @@
         </el-popover>
       </el-header>
       <el-container>
-        <el-aside width="180px">
+        <el-aside width="150px">
           <el-col>
             <!-- @select="handleSelect" -->
             <el-menu
@@ -74,12 +74,16 @@ export default {
   float: right;
   height: 30px;
   color: #000000;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .el-header .headTitle {
   text-align: center;
   font-weight: 500;
   color: #000000;
   line-height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .el-header img {
   height: 90%;

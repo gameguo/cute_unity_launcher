@@ -25,7 +25,7 @@ function createWindow() {
     width: 940,
     height: 630,
     "center": true,
-    "minWidth": 600,//窗口的最小宽度，单位: 像素值,
+    "minWidth": 650,//窗口的最小宽度，单位: 像素值,
     "minHeight": 400,//窗口的最小高度，单位: 像素值,
     "title": applicationName,
     // titleBarStyle: 'hidden',
