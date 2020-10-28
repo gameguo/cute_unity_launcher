@@ -11,12 +11,14 @@
           height="100%"
           style="width: 100%"
           :cell-style="rowStyle"
+          :header-cell-style="rowHeaderStyle"
           :cell-class-name="getCellIndex"
         >
           <el-table-column
             show-overflow-tooltip
             prop="name"
             label="项目名称"
+            min-width="100px"
           ></el-table-column>
           <el-table-column prop="version" label="编辑器版本" width="150">
           </el-table-column>
@@ -33,7 +35,12 @@
       </div>
     </div>
     <footer>
-      <div class="contentBottom"></div>
+      <div class="contentBottom">
+        <el-button class="contentBottomBtn" type="primary" round>
+          新建
+        </el-button>
+        <el-button class="contentBottomBtn" type="info" round>导入</el-button>
+      </div>
     </footer>
   </div>
 </template>
@@ -50,12 +57,14 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
+  background-color: white;
 }
 .contentTitle {
-  margin: 10px 10px 0px 10px;
+  margin: 0;
+  /* margin: 10px 10px 0px 10px; */
   height: 40px;
   background-color: white;
-  padding-left: 20px;
+  padding: 2px 20px;
   text-align: left;
   line-height: 40px;
   font-size: 20px;
@@ -67,14 +76,22 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin: 10px 10px 0px 10px;
-  background-color: aqua;
+  margin: 0;
   overflow: hidden;
 }
 .contentBottom {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center; /* 垂直居中 */
   margin: 10px;
   height: 40px;
-  background-color: bisque;
+  background-color: white;
+}
+.contentBottomBtn {
+  height: 35px;
+  width: 100px;
+  margin-right: 10px;
+  text-align: center;
 }
 </style>
 
@@ -85,7 +102,15 @@ export default {
     rowStyle({ row, column, rowIndex, columnIndex }) {
       var style = "";
       if (columnIndex < this.handleIndex) {
-        return style + "cursor:pointer";
+        return style + "padding-left:10px;cursor:pointer;";
+      } else {
+        return style;
+      }
+    },
+    rowHeaderStyle({ row, column, rowIndex, columnIndex }) {
+      var style = "";
+      if (columnIndex < this.handleIndex) {
+        return style + "padding-left:10px;";
       } else {
         return style;
       }
