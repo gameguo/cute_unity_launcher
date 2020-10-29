@@ -1,8 +1,11 @@
+import { ipcMain } from 'electron'
 import registry_win from '../config/registry_win.js'
 import regedit from '../lib/regedit_win.js'
 import utils from '../lib/utils.js'
 import fs from 'fs'
 import path from 'path'
+
+const project = {}
 
 function getProjectVersion(projectPath) {
     let projectVersion = '';
@@ -23,7 +26,7 @@ function getProjectVersion(projectPath) {
 /**
  * @param {function} callback callback
  */
-function getProjectNames(callback) {
+function getProjects(callback) {
     let key = registry_win.keys.hkcu + '\\' + registry_win.keys.prefs5x;
     regedit.query(key, registry_win.keys.projectKey, (datas, error) => {
         if (error) {
@@ -54,20 +57,18 @@ function getProjectNames(callback) {
                 });
             }
         }
+        result.sort(function (a, b) {
+            return b.projectMTime < a.projectMTime ? -1 : 1
+        })
         callback(result);
     });
 }
 
-function project(win) {
-    getProjectNames((data, error) => {
-        if (error) {
-            return;
-        }
-        for (let index = 0; index < data.length; index++) {
-            const element = data[index];
-            console.log(element)
-        }
+ipcMain.on('getProjects-message', (event, arg) => {
+    getProjects((data, error) => {
+        event.reply('getProjects-reply', { data: data, error: error }); // 回复异步消息
     })
-};
+    // event.returnValue = 'pong' // 回复同步消息
+})
 
 export default project;

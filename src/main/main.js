@@ -1,5 +1,5 @@
 import { BrowserWindow } from 'electron'
-import project from './events/project.js'
+import './events/project.js'
 
 let windows
 
@@ -14,7 +14,6 @@ function main(win) {
     windows = win;
     console.rendererlog = rendererlog;
     windows.webContents.send('platform', process.platform)
-    project(win);
 }
 
 export default main;

@@ -16,13 +16,16 @@
         >
           <el-table-column
             show-overflow-tooltip
-            prop="name"
+            prop="proejctName"
             label="项目名称"
             min-width="100px"
           ></el-table-column>
-          <el-table-column prop="version" label="编辑器版本" width="150">
+          <el-table-column prop="proejctVersion" label="编辑器版本" width="150">
           </el-table-column>
-          <el-table-column prop="mtime" label="最后打开" width="140">
+          <el-table-column prop="projectMTime" label="最后打开" width="140">
+            <template slot-scope="scope">
+              <span>{{ utils.getDateStr(scope.row.projectMTime) }}</span>
+            </template>
           </el-table-column>
           <el-table-column prop="menu" label="" scoped-slot width="60">
             <template>
@@ -124,74 +127,17 @@ export default {
       console.log(row);
       // console.log(row.name, row);
     },
+    updateProject() {
+      this.tableData = window.projects;
+    },
   },
   mounted() {
     this.handleIndex = 3;
+    this.data_listence.projectDataChange.push(this.updateProject);
   },
   data() {
     return {
-      tableData: [
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-        {
-          name: "testProjectName",
-          version: "2019.4.10f1",
-          mtime: "1天前",
-        },
-      ],
+      tableData: window.projects,
     };
   },
 };

@@ -1,9 +1,5 @@
 const regedit = {};
-
 var cp = require('child_process');
-// var decoder = new TextDecoder('gbk');//使用这个也没有解决乱码问题
-var iconv = require('iconv-lite');
-const encoding = 'cp936';
 const binaryEncoding = 'binary';
 
 // REG QUERY /?   查看详细语法
@@ -20,8 +16,7 @@ regedit.query = function (key, include, callback) {
             callback(null, error);
         } else {
             if (stderr) {
-
-                if (err) err(stderr);
+                callback(null, stderr);
             } else {
                 // var resultOut = iconv.decode(Buffer.from(stdout, binaryEncoding), encoding);
                 var lines = stdout.split('\n');
