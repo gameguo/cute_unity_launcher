@@ -21,9 +21,15 @@ regedit.query = function (key, include, callback, err) {
                 // var resultOut = iconv.decode(Buffer.from(stdout, binaryEncoding), encoding);
                 var lines = stdout.split('\n');
                 if (include) {
-                    var result = lines.filter(function (value) {
+                    var datas = lines.filter(function (value) {
                         return (value.indexOf(include)) != -1
                     }).sort();
+                    var result = [];
+                    for (let index = 0; index < datas.length; index++) {
+                        const element = datas[index];
+                        var line = element.trim().split(/\s+/);
+                        result.push(line);
+                    }
                     callback(result);
                 } else {
                     callback(lines);

@@ -1,6 +1,7 @@
 import { BrowserWindow } from 'electron'
 import registry_win from './unity/config/registry_win.js'
 import regedit from './lib/regedit_win.js'
+import utils from './lib/utils.js'
 
 let windows
 
@@ -19,8 +20,13 @@ function main(win) {
 
     let key = registry_win.keys.hkcu + '\\' + registry_win.keys.prefs5x;
 
-    regedit.query(key, registry_win.keys.projectKey, (data) => {
-        console.log(data);
+    regedit.query(key, registry_win.keys.projectKey, (datas) => {
+        console.log(datas.length)
+        for (let index = 0; index < datas.length; index++) {
+            const element = datas[index];
+            var projectPath = utils.hexToString(element[2]);
+            console.log(projectPath)
+        }
     }, (error) => {
         console.log("\n query Reg Error ! : \n", error);
     })
