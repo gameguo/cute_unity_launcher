@@ -103,7 +103,11 @@ export default {
   name: "project",
   methods: {
     rowStyle({ row, column, rowIndex, columnIndex }) {
-      var style = "";
+      var style =
+        "border-bottom-style:solid;border-width:1px;border-color:#ef1d5e;";
+      if (rowIndex == 0) {
+        style += "border-top-style:solid;";
+      }
       if (columnIndex < this.handleIndex) {
         return style + "padding-left:10px;cursor:pointer;";
       } else {

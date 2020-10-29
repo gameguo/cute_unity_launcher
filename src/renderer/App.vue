@@ -5,6 +5,14 @@
 </template>
 
 <style>
+.el-table__body tr > td {
+  color: black;
+}
+.el-table__body tr:hover > td {
+  background-color: #ef1d5e !important;
+  color: white;
+}
+
 html,
 body {
   background: rgb(255, 255, 255);
