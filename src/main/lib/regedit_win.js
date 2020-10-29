@@ -8,11 +8,16 @@ const binaryEncoding = 'binary';
 
 // REG QUERY /?   查看详细语法
 
-regedit.query = function (key, include, callback, err) {
+/**
+ * @param {string} key regedit key
+ * @param {string} include name include
+ * @param {function} callback callback
+ */
+regedit.query = function (key, include, callback) {
     var command = 'REG QUERY "' + key + '" /s';
     cp.exec(command, { encoding: binaryEncoding }, function (error, stdout, stderr) {
         if (error) {
-            if (err) err(error);
+            callback(null, error);
         } else {
             if (stderr) {
 

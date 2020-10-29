@@ -7,7 +7,8 @@ const registryKeys = {
     uninstall: 'Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
     envar: 'Environment',
     sysEnVar: 'SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
-    projectKey: "RecentlyUsedProjectPaths-"
+    projectKey: "RecentlyUsedProjectPaths-",
+    projectKeyType_BINARY: "REG_BINARY",
 };
 module.exports = {
     keys: registryKeys

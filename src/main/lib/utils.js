@@ -1,24 +1,30 @@
 const utils = {};
 
 
-utils.strToHexCharCode = function (str) {
-    var val = "";
+utils.strToHex = function (str) {
+    if (str == '')
+        return '';
+    let hex = [];
+    hex.push('0x');
     for (var i = 0; i < str.length; i++) {
-        if (val == "")
-            val = str.charCodeAt(i).toString(16);
-        else
-            val += "," + str.charCodeAt(i).toString(16);
+        hex.push((str.charCodeAt(i)).toString(16));
     }
-    return val;
+    return hex.join('');
 }
 
 utils.hexToString = function (str) {
-    var val = "";
-    var arr = str.split(",");
-    for (var i = 0; i < arr.length; i++) {
-        val += arr[i].fromCharCode(i);
+    if (str.length % 2 != 0) {
+        console.log('转换失败：必须为偶数');
+        return '';
     }
-    return val;
+    str = str.substr(0, str.length - 2);  //去除末尾的00 结束符
+    let strs = [];
+    for (var i = 0; i < str.length; i = i + 2) {
+        let a = parseInt(str.substr(i, 2), 16);
+        strs.push(String.fromCharCode(a));
+    }
+    var result = strs.join('');
+    return result;
 }
 
 module.exports = utils;
