@@ -46,14 +46,6 @@
         <el-button class="contentBottomBtn" type="info" round>导入</el-button>
       </div>
     </footer>
-    <context-button
-      v-if="menuVisible"
-      @foo="foo"
-      ref="contextbutton"
-      @handleOne="handleOne"
-      @handleTwo="handleTwo"
-      @handleThree="handleThree"
-    ></context-button>
   </div>
 </template>
 
@@ -108,12 +100,8 @@
 </style>
 
 <script>
-import contextButton from "@/renderer/components/contextButton.vue";
 export default {
   name: "project",
-  components: {
-    contextButton,
-  },
   methods: {
     rowStyle({ row, column, rowIndex, columnIndex }) {
       var style =
@@ -144,29 +132,22 @@ export default {
       console.log(row);
       // console.log(row.name, row);
     },
+    openContextMenu(row) {
+      this.context_menu.openProjectMenu(
+        function () {
+          console.log("点击1");
+        },
+        function () {
+          console.log("点击2");
+        }
+      );
+    },
     rowContextmenu(row, column, event) {
-      this.menuVisible = false;
-      this.menuVisible = true;
       // 阻止右键默认行为
       event.preventDefault();
       this.$nextTick(() => {
-        this.$refs.contextbutton.init(row, column, event);
+        this.openContextMenu(row);
       });
-    },
-    foo() {
-      // 取消鼠标监听事件 菜单栏
-      this.menuVisible = false;
-      document.removeEventListener("click", this.foo);
-    },
-    handleOne() {
-      console.log("点击菜单一");
-    },
-
-    handleTwo() {
-      console.log("点击菜单二");
-    },
-    handleThree() {
-      console.log("点击菜单三");
     },
     updateProject() {
       this.tableData = window.projects;
@@ -174,11 +155,10 @@ export default {
   },
   mounted() {
     this.handleIndex = 3;
-    this.data_listence.projectDataChange.push(this.updateProject);
+    this.project.projectDataChange.push(this.updateProject);
   },
   data() {
     return {
-      menuVisible: false,
       tableData: window.projects,
     };
   },

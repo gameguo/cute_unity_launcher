@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const utils = {}
 
 utils.getDateStr = function (date) {
@@ -25,5 +27,7 @@ utils.getDateStr = function (date) {
     }
     return result;
 }
+
+Vue.prototype.utils = utils
 
 export default utils;
