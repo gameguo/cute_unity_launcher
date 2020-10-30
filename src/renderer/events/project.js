@@ -1,5 +1,7 @@
 import Vue from 'vue'
 
+let windows;
+
 const project = {}
 
 window.ipcRenderer.on('getProjects-reply', (event, arg) => {
@@ -17,12 +19,25 @@ window.ipcRenderer.on('getProjects-reply', (event, arg) => {
     }
 })
 
+window.ipcRenderer.on('updateProjects-reply', (event, arg) => {
+    requestProject(); // 更新项目
+})
+
 function requestProject() {
     window.ipcRenderer.send('getProjects-message')
 }
 
+function requestStartProject(projectData) {
+    window.ipcRenderer.send('startProject-message', projectData)
+    // console.log("requestStartProject:" + projectData.projectName +
+    //     " unityVersion : " + projectData.projectVersion +
+    //     " projectPath : " + projectData.projectPath);
+}
+
 project.requestProject = requestProject;
 project.projectDataChange = []
+
+project.requestStartProject = requestStartProject;
 
 requestProject();
 

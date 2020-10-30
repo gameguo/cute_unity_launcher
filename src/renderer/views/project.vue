@@ -17,19 +17,19 @@
         >
           <el-table-column
             show-overflow-tooltip
-            prop="proejctName"
+            prop="projectName"
             label="项目名称"
             min-width="100px"
           >
             <template slot-scope="scope">
-              <span>{{ scope.row.proejctName }}</span>
+              <span>{{ scope.row.projectName }}</span>
               <br />
               <span class="rowLink">{{ scope.row.projectPath }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="proejctVersion" label="编辑器版本" width="120">
+          <el-table-column prop="projectVersion" label="编辑器版本" width="120">
             <template slot-scope="scope">
-              <span>{{ scope.row.proejctVersion }}</span>
+              <span>{{ scope.row.projectVersion }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="projectMTime" label="最后修改" width="120">
@@ -146,13 +146,12 @@ export default {
         style += "border-top-style:solid;";
       }
       if (columnIndex == 0) {
-        return style + "padding-left:10px;";
+        style += "padding-left:10px;";
       }
       if (columnIndex != this.handleIndex) {
-        return style + "cursor:pointer;";
-      } else {
-        return style;
+        style += "cursor:pointer;";
       }
+      return style;
     },
     rowHeaderStyle({ row, column, rowIndex, columnIndex }) {
       var style = "";
@@ -167,7 +166,7 @@ export default {
     },
     rowClick(row, column, cell, event) {
       if (column.index == this.handleIndex) return;
-      console.log("TODO : " + row.projectPath);
+      this.project.requestStartProject(row);
     },
     openContextMenu(row) {
       this.context_menu.openProjectMenu(
