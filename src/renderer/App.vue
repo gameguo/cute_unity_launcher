@@ -6,11 +6,12 @@
 
 <style>
 .el-table__body tr > td {
-  color: black;
+  font-size: 13px;
+  color: #0e0e0e;
 }
 .el-table__body tr:hover > td {
   background-color: #ef1d5e !important;
-  color: white;
+  color: #ffffff;
 }
 
 html,

@@ -5,13 +5,15 @@ const context_menu = {}
 const Menu = window.remote.Menu;
 const MenuItem = window.remote.MenuItem;
 
+
 var projectMenu = new Menu();
-//添加菜单功能
-projectMenu.append(new MenuItem({ label: 'MenuItem1', click: projectMenu1Click }));
-//添加菜单分割线
+
+var projectEditorMenu = new Menu();
+
+projectMenu.append(new MenuItem({ label: '打开所在文件夹', click: projectMenu1Click }));
+projectMenu.append(new MenuItem({ type: 'submenu', submenu: projectEditorMenu, label: '用其他版本编辑器打开' }));
 projectMenu.append(new MenuItem({ type: 'separator' }));
-//添加菜单功能
-projectMenu.append(new MenuItem({ label: 'MenuItem2', click: projectMenu2Click }));
+projectMenu.append(new MenuItem({ label: '从列表中移除', click: projectMenu2Click }));
 
 function projectMenu1Click() {
     if (context_menu.projectCallback.callback1) {

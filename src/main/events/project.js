@@ -43,6 +43,9 @@ function getProjects(callback) {
             } else {
                 projectPath = element[2];
             }
+            if (process.platform == "win32") {
+                projectPath = projectPath.replace(/\\|\//g, "\\");
+            }
             if (fs.existsSync(projectPath)) {
                 let projectName = path.basename(projectPath);
                 let stat = fs.statSync(projectPath);
