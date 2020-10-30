@@ -27,12 +27,12 @@
               <span class="rowLink">{{ scope.row.projectPath }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="proejctVersion" label="编辑器版本" width="150">
+          <el-table-column prop="proejctVersion" label="编辑器版本" width="120">
             <template slot-scope="scope">
               <span>{{ scope.row.proejctVersion }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="projectMTime" label="最后打开" width="140">
+          <el-table-column prop="projectMTime" label="最后修改" width="120">
             <template slot-scope="scope">
               <span>{{ utils.getDateStr(scope.row.projectMTime) }}</span>
             </template>
@@ -48,6 +48,9 @@
                 ></el-button>
               </div>
             </template>
+          </el-table-column>
+          <el-table-column prop="empty" label="" scoped-slot width="30">
+            <template> </template>
           </el-table-column>
         </el-table>
       </div>
@@ -121,6 +124,7 @@
   align-items: center; /* 垂直居中 */
   margin: 10px;
   height: 40px;
+  padding-right: 20px;
   background-color: white;
 }
 .contentBottomBtn {
@@ -141,28 +145,29 @@ export default {
       if (rowIndex == 0) {
         style += "border-top-style:solid;";
       }
-      if (columnIndex < this.handleIndex) {
-        return style + "padding-left:10px;cursor:pointer;";
+      if (columnIndex == 0) {
+        return style + "padding-left:10px;";
+      }
+      if (columnIndex != this.handleIndex) {
+        return style + "cursor:pointer;";
       } else {
         return style;
       }
     },
     rowHeaderStyle({ row, column, rowIndex, columnIndex }) {
       var style = "";
-      if (columnIndex < this.handleIndex) {
-        return style + "padding-left:10px;";
-      } else {
-        return style;
+      if (columnIndex == 0) {
+        return style + "padding-left:10px";
       }
+      return style;
     },
     getCellIndex({ row, column, rowIndex, columnIndex }) {
       row.index = rowIndex;
       column.index = columnIndex;
     },
     rowClick(row, column, cell, event) {
-      if (column.index >= this.handleIndex) return;
-      console.log(row);
-      // console.log(row.name, row);
+      if (column.index == this.handleIndex) return;
+      console.log("TODO : " + row.projectPath);
     },
     openContextMenu(row) {
       this.context_menu.openProjectMenu(
@@ -184,9 +189,6 @@ export default {
               if (data.response == 0) {
                 console.log("TODO 移除项目:" + row.projectPath);
               }
-              // else {
-              //   console.log("取消");
-              // }
             });
         }
       );
