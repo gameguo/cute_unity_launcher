@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, ipcMain } from 'electron'
 import project from './events/project.js'
 
 let windows
@@ -16,5 +16,9 @@ function main(win) {
     windows.webContents.send('platform', process.platform);
     project(win);
 }
+
+ipcMain.on('openDevTools-message', (event, arg) => {
+    windows.webContents.toggleDevTools();
+})
 
 export default main;

@@ -4,6 +4,7 @@
       <el-header height="40px">
         <img src="@/renderer/assets/logo.png" draggable="false" />
         <div class="headTitle">Cute Launcher</div>
+
         <el-popover
           placement="top-start"
           width="100"
@@ -17,6 +18,14 @@
             type="text"
             @click="githubClick()"
             >github</el-button
+          >
+          <el-button
+            slot="reference"
+            class="headClick"
+            type="text"
+            @click="openConsole()"
+            style="padding-right: 10px"
+            >控制台</el-button
           >
         </el-popover>
       </el-header>
@@ -61,6 +70,9 @@ export default {
         "https://github.com/gameguo/cute_unity_launcher"
       );
     },
+    openConsole() {
+      this.common_event.openDevTools();
+    },
   },
 };
 </script>
@@ -71,6 +83,7 @@ export default {
   height: 30px;
   color: #000000;
   overflow: hidden;
+  text-align: center;
   text-overflow: ellipsis;
 }
 .el-header .headTitle {

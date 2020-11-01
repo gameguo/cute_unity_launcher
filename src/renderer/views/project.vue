@@ -72,6 +72,13 @@
           @click="importProjectClick"
           >导入</el-button
         >
+        <el-button
+          class="contentBottomBtn"
+          type="info"
+          round
+          @click="refreshProjectClick"
+          >刷新</el-button
+        >
       </div>
     </footer>
   </div>
@@ -169,6 +176,7 @@ export default {
       this.project.requestStartProject(row);
     },
     openContextMenu(row) {
+      var that = this;
       this.context_menu.openProjectMenu(
         function () {
           // window.remote.shell.openExternal(row.projectPath);
@@ -177,18 +185,7 @@ export default {
           window.remote.shell.showItemInFolder(path);
         },
         function () {
-          window.remote.dialog
-            .showMessageBox({
-              type: "warning",
-              title: "是否移除",
-              message: "确定将此项目从列表中移除？此项目将仍然保留在硬盘中. ",
-              buttons: ["ok", "cancel"],
-            })
-            .then((data) => {
-              if (data.response == 0) {
-                console.log("TODO 移除项目:" + row.projectPath);
-              }
-            });
+          that.project.requestDeleteProject(row);
         }
       );
     },
@@ -207,22 +204,11 @@ export default {
     updateProject() {
       this.tableData = window.projects;
     },
+    refreshProjectClick() {
+      this.project.requestProject();
+    },
     importProjectClick() {
-      window.remote.dialog
-        .showOpenDialog({
-          properties: ["openFile", "openDirectory"],
-          title: "选择项目",
-          buttonLabel: "选择项目",
-        })
-        .then((data) => {
-          if (data.canceled == true) {
-            return;
-          }
-          if (data.filePaths.length > 0) {
-            var selectpPath = data.filePaths[0];
-            console.log("TODO : 导入项目 -- " + selectpPath);
-          }
-        });
+      this.project.requestImportProject();
     },
     createProjectClick() {
       console.log("TODO Create Project");

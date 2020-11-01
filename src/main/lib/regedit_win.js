@@ -4,6 +4,25 @@ const binaryEncoding = 'binary';
 
 // REG QUERY /?   查看详细语法
 
+regedit.delete = function (key, keyName, callback) {
+    if (!key || !keyName) {
+        callback(null, "delete key is null : " + key + " " + keyName);
+        return;
+    }
+    var command = 'REG DELETE "' + key + '" /v ' + keyName + " /f";
+    cp.exec(command, function (error, stdout, stderr) {
+        if (error) {
+            callback(null, error);
+        } else {
+            if (stderr) {
+                callback(null, stderr);
+            } else {
+                callback(stdout);
+            }
+        }
+    });
+}
+
 /**
  * @param {string} key regedit key
  * @param {string} include name include

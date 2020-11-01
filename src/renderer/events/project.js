@@ -1,7 +1,5 @@
 import Vue from 'vue'
 
-let windows;
-
 const project = {}
 
 window.ipcRenderer.on('getProjects-reply', (event, arg) => {
@@ -29,15 +27,22 @@ function requestProject() {
 
 function requestStartProject(projectData) {
     window.ipcRenderer.send('startProject-message', projectData)
-    // console.log("requestStartProject:" + projectData.projectName +
-    //     " unityVersion : " + projectData.projectVersion +
-    //     " projectPath : " + projectData.projectPath);
+}
+
+function requestImportProject() {
+    window.ipcRenderer.send('importProject-message')
+}
+
+function requestDeleteProject(projectData) {
+    window.ipcRenderer.send('deleteProject-message', projectData)
 }
 
 project.requestProject = requestProject;
 project.projectDataChange = []
 
 project.requestStartProject = requestStartProject;
+project.requestImportProject = requestImportProject;
+project.requestDeleteProject = requestDeleteProject;
 
 requestProject();
 
