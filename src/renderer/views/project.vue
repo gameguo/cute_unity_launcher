@@ -211,7 +211,7 @@ export default {
       this.project.requestImportProject();
     },
     createProjectClick() {
-      console.log("TODO Create Project");
+      this.$router.replace("/create_project");
     },
   },
   mounted() {

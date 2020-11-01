@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from 'electron'
+import { BrowserWindow, ipcMain, dialog } from 'electron'
 import project from './events/project.js'
 
 let windows
@@ -19,6 +19,25 @@ function main(win) {
 
 ipcMain.on('openDevTools-message', (event, arg) => {
     windows.webContents.toggleDevTools();
+})
+
+ipcMain.on('selectFolder-message', (event, arg) => {
+    let defaultPath = arg;
+    dialog.showOpenDialog(windows, {
+        properties: ["openFile", "openDirectory"],
+        title: "选择文件夹",
+        buttonLabel: "选择文件夹",
+        defaultPath: defaultPath,
+    }).then((data) => {
+        if (data.canceled == true) {
+            event.reply('selectFolder-reply', null);
+            return;
+        }
+        if (data.filePaths.length > 0) {
+            var selectpPath = data.filePaths[0];
+            event.reply('selectFolder-reply', selectpPath);
+        }
+    });
 })
 
 export default main;
