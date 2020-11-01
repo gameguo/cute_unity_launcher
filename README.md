@@ -4,17 +4,19 @@
 Unity Launcher | Unity的启动器
 ```
 
-## Project setup
+## Install
+
+```
+windows : download exe or compiler
+mac : not support ...
+```
+
+![main](./document/main.png)
+
+
+## Compiler
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
 npm run start
-```
-
-### Compiles and minifies for production
-```
 npm run build
 ```

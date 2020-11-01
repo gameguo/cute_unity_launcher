@@ -148,7 +148,7 @@ export default {
   methods: {
     rowStyle({ row, column, rowIndex, columnIndex }) {
       var style =
-        "border-bottom-style:solid;border-width:1px;border-color:#ef1d5e;";
+        "border-bottom-style:solid;border-width:1px;border-color:#999999;";
       if (rowIndex == 0) {
         style += "border-top-style:solid;";
       }

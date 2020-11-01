@@ -44,7 +44,7 @@ button {
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   border: 2px solid transparent;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: #ef1d5f9f;
   background-clip: content-box;
   transition: background-color 0.3s;
 }
@@ -52,7 +52,7 @@ button {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #ef1d5fda;
 }
 </style>
 
