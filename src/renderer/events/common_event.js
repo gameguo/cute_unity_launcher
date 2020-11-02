@@ -26,5 +26,15 @@ window.ipcRenderer.on('selectFolder-reply', (event, arg) => {
 common_event.openDevTools = openDevTools;
 common_event.selectFolder = selectFolder;
 
+common_event.openMessageBox = function (title, content) {
+    window.ipcRenderer.send('openMessageBox-info', { title: title, message: content })
+}
+common_event.openMessageBoxWarning = function (title, content) {
+    window.ipcRenderer.send('openMessageBox-warning', { title: title, message: content })
+}
+common_event.openMessageBoxError = function (title, content) {
+    window.ipcRenderer.send('openMessageBox-error', { title: title, message: content })
+}
+
 Vue.prototype.common_event = common_event;
 export default common_event;

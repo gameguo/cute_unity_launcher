@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import project from './events/project.js'
 
 let windows
@@ -13,12 +13,36 @@ function rendererlog(log) {
 function main(win) {
     windows = win;
     console.rendererlog = rendererlog;
-    windows.webContents.send('platform', process.platform);
+    windows.webContents.send('init-message', { platform: process.platform, documentsPath: app.getPath('documents') });
     project(win);
 }
 
 ipcMain.on('openDevTools-message', (event, arg) => {
     windows.webContents.toggleDevTools();
+})
+
+function openMessageBox(type, title, message, buttons, callback) {
+    dialog.showMessageBox(windows, {
+        type: type,
+        title: title,
+        message: message,
+        buttons: buttons,
+        noLink: true,
+    }).then((data) => {
+        if (callback) callback(data.response);
+    });
+}
+
+ipcMain.on('openMessageBox-info', (event, arg) => {
+    openMessageBox("info", arg.title, arg.message, ['确定']);
+})
+
+ipcMain.on('openMessageBox-warning', (event, arg) => {
+    openMessageBox("warning", arg.title, arg.message, ['确定']);
+})
+
+ipcMain.on('openMessageBox-error', (event, arg) => {
+    openMessageBox("error", arg.title, arg.message, ['确定']);
 })
 
 ipcMain.on('selectFolder-message', (event, arg) => {

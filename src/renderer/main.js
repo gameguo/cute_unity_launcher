@@ -5,7 +5,7 @@ import store from './store'
 import './element/element'
 import './common/utils.js'
 import './events/project.js'
-import './events/platform.js'
+import './events/init.js'
 import './events/context_menu.js'
 import './events/common_event.js'
 

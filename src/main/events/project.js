@@ -217,13 +217,29 @@ ipcMain.on('deleteProject-message', (event, arg) => {
         type: "warning",
         title: "是否移除",
         message: "确定将此项目从列表中移除？此项目将仍然保留在硬盘中. ",
-        buttons: ["ok", "cancel"],
+        buttons: ["确定", "取消"],
+        noLink: true,
     }).then((data) => {
         if (data.response == 0) {
             let projectData = arg;
             deleteProject(projectData);
         }
     });
+})
+
+ipcMain.on('createProject-message', (event, arg) => {
+    var projectData = arg;
+    console.log(
+        "TODO create " +
+        projectData.projectName +
+        " " +
+        projectData.projectPath +
+        " " +
+        projectData.projectVersion +
+        " " +
+        projectData.template
+    );
+
 })
 
 export default project;

@@ -44,7 +44,7 @@ button {
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   border: 2px solid transparent;
-  background-color: #ef1d5f9f;
+  background-color: #463e403f;
   background-clip: content-box;
   transition: background-color 0.3s;
 }

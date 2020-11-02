@@ -37,12 +37,17 @@ function requestDeleteProject(projectData) {
     window.ipcRenderer.send('deleteProject-message', projectData)
 }
 
+function requestCreateProject(projectData) {
+    window.ipcRenderer.send('createProject-message', projectData)
+}
+
 project.requestProject = requestProject;
 project.projectDataChange = []
 
 project.requestStartProject = requestStartProject;
 project.requestImportProject = requestImportProject;
 project.requestDeleteProject = requestDeleteProject;
+project.requestCreateProject = requestCreateProject;
 
 requestProject();
 

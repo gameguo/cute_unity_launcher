@@ -4,12 +4,32 @@
       <div class="contentTitle">创建项目</div>
     </header>
     <div class="contentContent">
-      <div>编辑器版本</div>
-      <div>模板</div>
-      <div class="createInput">
-        <div class="createInputTitle">项目名称 :</div>
+      <div class="createRowItem">
+        <div class="createRowItemTitle">编辑器版本 :</div>
+        <el-select
+          size="small"
+          v-model="projectVersionValue"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in projectVersionOptions"
+            :label="item.label"
+            :value="item.value"
+            :key="item.value"
+          ></el-option>
+        </el-select>
+      </div>
+      <div class="createRowItem">
+        <div class="createRowItemTitle">模板 :</div>
+        <el-radio-group v-model="projectTemplateValue" size="small">
+          <el-radio-button label="2D"></el-radio-button>
+          <el-radio-button label="3D"></el-radio-button>
+        </el-radio-group>
+      </div>
+      <div class="createRowItem">
+        <div class="createRowItemTitle">项目名称 :</div>
         <el-input
-          class="createInputInput"
+          class="createRowItemContent"
           placeholder=""
           v-model="projectNameInput"
           type="text"
@@ -17,12 +37,14 @@
         >
         </el-input>
       </div>
-      <div class="createInput">
-        <div class="createInputTitle">位置 :</div>
+      <div class="createRowItem">
+        <div class="createRowItemTitle">位置 :</div>
         <el-input
-          class="createInputInput"
+          class="createRowItemContent"
           placeholder=""
           v-model="projectPathInput"
+          type="text"
+          spellcheck="false"
         >
           <el-button
             type="text"
@@ -53,18 +75,19 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.createInputInput {
+.createRowItemContent {
   flex: 1;
 }
-.createInputTitle {
+.createRowItemTitle {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: right;
+  font-size: 15px;
   padding-right: 10px;
-  width: 80px;
+  width: 90px;
 }
-.createInput {
+.createRowItem {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -123,21 +146,40 @@ export default {
       this.$router.replace("/project");
     },
     createProjectClick() {
-      console.log("TODO create");
+      if (!this.projectVersionValue) {
+        this.common_event.openMessageBoxWarning("提示", "请选择编辑器版本");
+        return;
+      }
+      this.project.requestCreateProject({
+        projectName: this.projectNameInput,
+        projectPath: this.projectPathInput,
+        projectVersion: this.projectVersionValue,
+        template: this.projectTemplateValue,
+      });
     },
     selectProjectFolder() {
       let that = this;
       this.common_event.selectFolder(that.projectPathInput, (path) => {
         that.projectPathInput = path;
-        console.log(path);
+        if (that.projectPathInput) {
+          window.store.set("create_project_path", that.projectPathInput);
+        }
       });
     },
   },
-  mounted() {},
+  mounted() {
+    var defaultPath = window.store.get("create_project_path");
+    if (defaultPath) {
+      this.projectPathInput = defaultPath;
+    }
+  },
   data() {
     return {
       projectNameInput: "NewProject",
-      projectPathInput: "C:\\",
+      projectPathInput: window.documentsPath,
+      projectVersionOptions: [],
+      projectVersionValue: "",
+      projectTemplateValue: "2D",
     };
   },
 };
