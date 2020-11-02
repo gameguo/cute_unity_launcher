@@ -140,7 +140,7 @@
 
 <script>
 export default {
-  name: "project",
+  name: "create_project",
   methods: {
     backClick() {
       this.$router.replace("/project");

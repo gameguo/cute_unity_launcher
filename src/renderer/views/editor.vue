@@ -8,6 +8,7 @@
         <el-table
           :data="tableData"
           @cell-click="rowClick"
+          @row-contextmenu="rowContextmenu"
           height="100%"
           style="width: 100%"
           :cell-style="rowStyle"
@@ -16,41 +17,60 @@
         >
           <el-table-column
             show-overflow-tooltip
-            prop="version"
+            prop="projectName"
             label="编辑器版本"
-            min-width="100px"
-            width="180px"
-          ></el-table-column>
-          <el-table-column
-            prop="path"
-            label="安装路径"
-            min-width="100px"
-            show-overflow-tooltip
+            width="140px"
           >
+            <template slot-scope="scope">
+              <span>{{ scope.row.version }}</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="menu"
-            label=""
-            scoped-slot
-            width="60"
-            min-width="60px"
             show-overflow-tooltip
+            prop="projectVersion"
+            label="安装路径"
+            min-width="120"
           >
-            <template>
+            <template slot-scope="scope">
+              <span>{{ scope.row.path }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="menu" label="" scoped-slot width="60">
+            <template slot-scope="scope">
               <div style="text-overflow: clip">
-                <el-button size="mini" icon="el-icon-more" round></el-button>
+                <el-button
+                  size="mini"
+                  icon="el-icon-more"
+                  round
+                  @click="clickMenuBtn(scope.row)"
+                ></el-button>
               </div>
             </template>
+          </el-table-column>
+          <el-table-column prop="empty" label="" scoped-slot width="30">
+            <template> </template>
           </el-table-column>
         </el-table>
       </div>
     </div>
     <footer>
       <div class="contentBottom">
-        <el-button class="contentBottomBtn" type="primary" round>
+        <el-button
+          class="contentBottomBtn"
+          type="primary"
+          round
+          @click="dowmloadEditorClick"
+          style="margin-left: 10px; margin-right: 10px"
+        >
           下载
         </el-button>
-        <el-button class="contentBottomBtn" type="info" round>添加</el-button>
+        <el-button
+          class="contentBottomBtn"
+          type="info"
+          round
+          @click="addEditorClick"
+          >添加</el-button
+        >
       </div>
     </footer>
   </div>
@@ -58,52 +78,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.contentContent .row-item {
-  position: absolute;
-  width: 100%;
-  height: calc(100%);
-}
-.flexContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-}
-.contentTitle {
-  margin: 0;
-  /* margin: 10px 10px 0px 10px; */
-  height: 40px;
-  background-color: white;
-  padding: 2px 20px;
-  text-align: left;
-  line-height: 40px;
-  font-size: 20px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.contentContent {
-  position: relative;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  overflow: hidden;
-}
-.contentBottom {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center; /* 垂直居中 */
-  margin: 10px;
-  height: 40px;
-  background-color: white;
-}
-.contentBottomBtn {
-  height: 35px;
-  width: 100px;
-  margin-right: 10px;
-  text-align: center;
-}
 </style>
 
 <script>
@@ -111,29 +85,71 @@ export default {
   name: "editor",
   methods: {
     rowStyle({ row, column, rowIndex, columnIndex }) {
-      var style = "";
-      if (columnIndex < this.handleIndex) {
-        return style + "padding-left:10px;cursor:pointer;";
-      } else {
-        return style;
+      var style =
+        "border-bottom-style:solid;border-width:1px;border-color:#999999;";
+      if (rowIndex == 0) {
+        style += "border-top-style:solid;";
       }
+      if (columnIndex == 0) {
+        style += "padding-left:10px;";
+      }
+      if (columnIndex != this.handleIndex) {
+        style += "cursor:pointer;";
+      }
+      return style;
     },
     rowHeaderStyle({ row, column, rowIndex, columnIndex }) {
       var style = "";
-      if (columnIndex < this.handleIndex) {
-        return style + "padding-left:10px;";
-      } else {
-        return style;
+      if (columnIndex == 0) {
+        return style + "padding-left:10px";
       }
+      return style;
     },
     getCellIndex({ row, column, rowIndex, columnIndex }) {
       row.index = rowIndex;
       column.index = columnIndex;
     },
     rowClick(row, column, cell, event) {
-      if (column.index >= this.handleIndex) return;
-      console.log(row);
-      // console.log(row.name, row);
+      if (column.index == this.handleIndex) return;
+      var path = row.path;
+      console.log(path);
+      window.remote.shell.showItemInFolder(path);
+    },
+    openContextMenu(row) {
+      var that = this;
+      this.context_menu.openEditorMenu(
+        function () {
+          // window.remote.shell.openExternal(row.projectPath);
+          var path = row.path;
+          console.log(path);
+          window.remote.shell.showItemInFolder(path);
+        },
+        function () {
+          that.editor.requestUninstallEditor(row.path);
+        }
+      );
+    },
+    rowContextmenu(row, column, event) {
+      // 阻止右键默认行为
+      event.preventDefault();
+      this.$nextTick(() => {
+        this.openContextMenu(row);
+      });
+    },
+    clickMenuBtn(row) {
+      this.$nextTick(() => {
+        this.openContextMenu(row);
+      });
+    },
+    addEditorClick() {
+      this.common_event.selectFolder(null, (path) => {
+        if (path) {
+          this.editor.requestImportEditor(path);
+        }
+      });
+    },
+    dowmloadEditorClick() {
+      this.$router.replace("/download_editor");
     },
   },
   mounted() {
@@ -143,8 +159,8 @@ export default {
     return {
       tableData: [
         {
-          version: "Unity - 2018.4.27f1",
-          path: "E:\\Development\\Soft\\Unitys\\2018.4.27f1\\Unity\\Editor",
+          version: "2018.4.27f1",
+          path: "E:\\DevelopmentSoft\\Unitys\\2018.4.27f1\\Unity\\Editor",
         },
       ],
     };

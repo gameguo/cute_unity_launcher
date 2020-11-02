@@ -77,6 +77,54 @@ export default {
 </script>
 
 <style>
+.contentContent .row-item {
+  position: absolute;
+  width: 100%;
+  height: calc(100%);
+}
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+}
+.contentTitle {
+  margin: 0;
+  /* margin: 10px 10px 0px 10px; */
+  height: 40px;
+  background-color: white;
+  padding: 2px 20px;
+  text-align: left;
+  line-height: 40px;
+  font-size: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.contentContent {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  overflow: hidden;
+}
+.contentBottom {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center; /* 垂直居中 */
+  margin: 10px;
+  height: 40px;
+  padding-right: 20px;
+  background-color: white;
+}
+.contentBottomBtn {
+  height: 35px;
+  width: 100px;
+  margin-right: 10px;
+  text-align: center;
+}
+
 .el-header .headClick {
   float: right;
   height: 30px;

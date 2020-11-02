@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import project from './events/project.js'
+import editor from './events/editor.js'
 
 let windows
 
@@ -15,6 +16,7 @@ function main(win) {
     console.rendererlog = rendererlog;
     windows.webContents.send('init-message', { platform: process.platform, documentsPath: app.getPath('documents') });
     project(win);
+    editor(win);
 }
 
 ipcMain.on('openDevTools-message', (event, arg) => {
@@ -47,6 +49,9 @@ ipcMain.on('openMessageBox-error', (event, arg) => {
 
 ipcMain.on('selectFolder-message', (event, arg) => {
     let defaultPath = arg;
+    if (!defaultPath) {
+        defaultPath = undefined;
+    }
     dialog.showOpenDialog(windows, {
         properties: ["openFile", "openDirectory"],
         title: "选择文件夹",

@@ -33,14 +33,26 @@ context_menu.openProjectMenu = function (callback1, callback2) {
     projectMenu.popup(remote.getCurrentWindow());
 }
 
-// window.addEventListener('contextmenu', function (e) {
-//     e.preventDefault();
-//     context_menu.openProjectMenu(function () {
-//         console.log("点击1");
-//     }, function () {
-//         console.log("点击2");
-//     });
-// }, false);
+var editorMenu = new Menu();
+
+editorMenu.append(new MenuItem({ label: '打开所在文件夹', click: editorMenu1Click }));
+editorMenu.append(new MenuItem({ label: '卸载', click: editorMenu2Click }));
+function editorMenu1Click() {
+    if (context_menu.editorCallback.callback1) {
+        context_menu.editorCallback.callback1();
+    }
+}
+function editorMenu2Click() {
+    if (context_menu.editorCallback.callback2) {
+        context_menu.editorCallback.callback2();
+    }
+}
+context_menu.openEditorMenu = function (callback1, callback2) {
+    context_menu.editorCallback = {}
+    context_menu.editorCallback.callback1 = callback1;
+    context_menu.editorCallback.callback2 = callback2;
+    editorMenu.popup(remote.getCurrentWindow());
+}
 
 Vue.prototype.context_menu = context_menu;
 export default context_menu;
