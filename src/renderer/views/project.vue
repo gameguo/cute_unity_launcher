@@ -155,9 +155,6 @@ export default {
         this.openContextMenu(row);
       });
     },
-    updateProject() {
-      this.tableData = window.projects;
-    },
     refreshProjectClick() {
       this.project.requestProject();
     },
@@ -168,13 +165,22 @@ export default {
       this.$router.replace("/create_project");
     },
   },
+  watch: {
+    listProjectData(val) {
+      this.tableData = this.$store.state.projects;
+    },
+  },
+  computed: {
+    listProjectData() {
+      return this.$store.state.projects;
+    },
+  },
   mounted() {
     this.handleIndex = 3;
-    this.project.projectDataChange.push(this.updateProject);
   },
   data() {
     return {
-      tableData: window.projects,
+      tableData: this.$store.state.projects,
     };
   },
 };

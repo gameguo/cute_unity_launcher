@@ -152,17 +152,22 @@ export default {
       this.$router.replace("/download_editor");
     },
   },
+  watch: {
+    listEditorData(val) {
+      this.tableData = this.$store.state.editors;
+    },
+  },
+  computed: {
+    listEditorData() {
+      return this.$store.state.editors;
+    },
+  },
   mounted() {
     this.handleIndex = 2;
   },
   data() {
     return {
-      tableData: [
-        {
-          version: "2018.4.27f1",
-          path: "E:\\DevelopmentSoft\\Unitys\\2018.4.27f1\\Unity\\Editor",
-        },
-      ],
+      tableData: this.$store.state.editors,
     };
   },
 };

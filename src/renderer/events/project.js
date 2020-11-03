@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from '../store/index';
 
 const project = {}
 
@@ -6,14 +7,8 @@ window.ipcRenderer.on('getProjects-reply', (event, arg) => {
     if (arg.error) {
         console.log('getProjects : error ----', arg.erro)
     } else {
-        window.projects = arg.data;
-        if (project.projectDataChange.length > 0) {
-            for (let index = 0; index < project.projectDataChange.length; index++) {
-                const callback = project.projectDataChange[index];
-                if (callback) callback();
-            }
-        }
-        console.log(window.projects)
+        store.state.projects = arg.data;
+        console.log(store.state.projects)
     }
 })
 
@@ -42,7 +37,6 @@ function requestCreateProject(projectData) {
 }
 
 project.requestProject = requestProject;
-project.projectDataChange = []
 
 project.requestStartProject = requestStartProject;
 project.requestImportProject = requestImportProject;
