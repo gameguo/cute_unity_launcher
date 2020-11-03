@@ -30,7 +30,7 @@ function getEditorData(selectPath) {
 
 function getData(editorPath) {
     return {
-        path: editorPath,
+        path: path.join(editorPath, 'Unity.exe'),
         version: '',
     }
 }
