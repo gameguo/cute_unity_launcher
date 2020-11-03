@@ -5,6 +5,8 @@ import utils from '../lib/utils.js'
 import process_utils from '../lib/process_utils.js'
 import fs from 'fs'
 import path from 'path'
+import Store from "electron-store";
+var store = new Store();
 
 let windows;
 const project = function (win) {
@@ -77,7 +79,12 @@ function getProjects(callback) {
 }
 
 function getProjectsAutoReply(event) {
+    var data = store.get('projectsDatas');
+    if (data) {
+        event.reply('getProjects-reply', { data: data });
+    }
     getProjects((data, error) => {
+        store.set('projectsDatas', data);
         event.reply('getProjects-reply', { data: data, error: error }); // 回复异步消息
     })
 }
