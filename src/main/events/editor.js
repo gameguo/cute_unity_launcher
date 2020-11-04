@@ -2,6 +2,7 @@ import { ipcMain, dialog } from 'electron'
 import fs from 'fs'
 import path from 'path'
 // import process_utils from '../lib/process_utils.js'
+// import vi from 'win-version-info'
 import Store from "electron-store";
 var store = new Store();
 
@@ -10,8 +11,10 @@ const editor = function (win) {
     windows = win;
 }
 
-function getEditorVersion(unityExePath, callback) {
+function getEditorVersion(unityExePath) {
 
+    // var info = vi(unityExePath);
+    // console.log(info);
     // unityExePath = unityExePath.replace(/\\/g, "\\\\");
     // let runPath = "wmic datafile where name=\"" + unityExePath + "\"";
     // process_utils.runProcess(runPath, 'get version', function (error, stdout, stderror) {
@@ -36,24 +39,20 @@ function getEditorVersion(unityExePath, callback) {
     //     }
     // });
 }
-function getEditorData(selectPath, callback) {
+function getEditorData(selectPath) {
     let unityPath = path.join(selectPath, 'Unity.exe');
     let editorPath = path.join(selectPath, 'Editor', 'Unity.exe');
     let usePath;
     if (fs.existsSync(unityPath)) usePath = unityPath;
     else if (fs.existsSync(editorPath)) usePath = editorPath;
     if (usePath) {
-        getEditorVersion(editorPath, function (data) {
-            if (!data) {
-                callback();
-            } else {
-                let version = data;
-                getData(editorPath, version);
-                callback(version);
-            }
-        })
-    } else {
-        callback();
+        var data = getEditorVersion(editorPath);
+        if (!data) {
+            return;
+        } else {
+            let version = data;
+            return getData(editorPath, version);
+        }
     }
 }
 
@@ -64,30 +63,25 @@ function getData(editorPath, version) {
     }
 }
 
-function checkOneEditor(data, index, event) {
-    const element = data[index];
-    if (element.path) {
-        getEditorData(element.path, function (data) {
-            if (data) { // 此编辑器存在 检查版本是否改变
-                if (data.version != element.version) {
+function updateAndCheckEditor(event) {
+    var data = store.get('editorDatas')
+    if (!data) data = [];
+    for (let index = data.length - 1; index >= 0; index--) {
+        const element = data[index];
+        if (element.path) {
+            var outData = getEditorData(element.path);
+            if (outData) { // 此编辑器存在 检查版本是否改变
+                if (outData.version != element.version) {
                     element.version = version;
-                    data[index] = element;
-                    store.set('editorDatas', data);
-                    event.reply('updateEditors-reply', data);
+                    data[index] = outData;
                 }
             } else { // 此编辑器不存在
                 data.splice(index, 1);
-                store.set('editorDatas', data);
-                event.reply('updateEditors-reply', data);
             }
-        })
+        }
     }
-}
-
-function checkEditor(data, event) {
-    for (let index = data.length - 1; index >= 0; index--) {
-        checkOneEditor(data, index, event);
-    }
+    store.set('editorDatas', data);
+    event.reply('updateEditors-reply', data);
 }
 
 ipcMain.on('uninstallEditor-message', (event, arg) => {
@@ -97,39 +91,35 @@ ipcMain.on('uninstallEditor-message', (event, arg) => {
 
 ipcMain.on('importEditor-message', (event, arg) => {
     var path = arg;
-    getEditorData(path, function (editorData) {
-        if (editorData) {
-            var data = store.get('editorDatas')
-            if (!data) data = [];
-            var isPush = true;
-            for (let index = 0; index < data.length; index++) {
-                const element = data[index];
-                if (element.path && element.path == editorData.path) {
-                    data[index] = editorData;
-                    isPush = false;
-                    break;
-                }
+    var editorData = getEditorData(path);
+    if (editorData) {
+        var data = store.get('editorDatas')
+        if (!data) data = [];
+        var isPush = true;
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            if (element.path && element.path == editorData.path) {
+                data[index] = editorData;
+                isPush = false;
+                break;
             }
-            if (isPush) data.push(editorData);
-            store.set('editorDatas', data);
-            event.reply('updateEditors-reply', data);
-        } else {
-            dialog.showMessageBox(windows, {
-                type: 'warning',
-                title: '提示',
-                message: '未检测到Unity.exe, 请检查路径',
-                buttons: ['确定'],
-                noLink: true,
-            });
         }
-    });
+        if (isPush) data.push(editorData);
+        store.set('editorDatas', data);
+        event.reply('updateEditors-reply', data);
+    } else {
+        dialog.showMessageBox(windows, {
+            type: 'warning',
+            title: '提示',
+            message: '未检测到Unity.exe, 请检查路径',
+            buttons: ['确定'],
+            noLink: true,
+        });
+    }
 })
 
 ipcMain.on('updateEditor-message', (event, arg) => {
-    var data = store.get('editorDatas')
-    if (!data) data = [];
-    event.reply('updateEditors-reply', data);
-    checkEditor(data, event);
+    updateAndCheckEditor(event);
 })
 
 export default editor;
