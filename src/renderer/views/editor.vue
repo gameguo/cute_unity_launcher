@@ -125,7 +125,10 @@ export default {
           window.remote.shell.showItemInFolder(path);
         },
         function () {
-          that.editor.requestUninstallEditor(row.path);
+          that.editor.requestUninstallEditor(row);
+        },
+        function () {
+          that.editor.requestRemoveListEditor(row);
         }
       );
     },

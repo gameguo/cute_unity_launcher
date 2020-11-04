@@ -8,9 +8,13 @@ utils.getDateStr = function (date) {
     var day = hour * 24;
     var month = day * 30;
     var time1 = new Date().getTime();//当前的时间戳
-    var time2 = date;//指定时间的时间戳
+    var time2;
+    if (typeof (date) == 'string') {
+        time2 = new Date(date).getTime();
+    } else {
+        time2 = date.getTime();
+    }
     var time = time1 - time2;
-
     var result = null;
     if (time < 0) {
         result = "刚刚"

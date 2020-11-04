@@ -1,8 +1,8 @@
 import { ipcMain, dialog } from 'electron'
 import fs from 'fs'
 import path from 'path'
-// import process_utils from '../lib/process_utils.js'
-// import vi from 'win-version-info'
+import process_utils from '../lib/process_utils.js'
+import vi from 'win-version-info'
 import Store from "electron-store";
 var store = new Store();
 
@@ -12,46 +12,31 @@ const editor = function (win) {
 }
 
 function getEditorVersion(unityExePath) {
-
-    // var info = vi(unityExePath);
-    // console.log(info);
-    // unityExePath = unityExePath.replace(/\\/g, "\\\\");
-    // let runPath = "wmic datafile where name=\"" + unityExePath + "\"";
-    // process_utils.runProcess(runPath, 'get version', function (error, stdout, stderror) {
-    //     if (error) {
-    //         callback();
-    //         console.log('error : ' + error);
-    //     } else if (stderror) {
-    //         callback();
-    //         console.log('stderror : ' + stderror);
-    //     } else {
-    //         if (stdout) {
-    //             var lines = stdout.split('\n');
-    //             if (lines) {
-    //                 if (lines.length > 1) {
-    //                     var version = lines[1];
-    //                     console.log(version);
-    //                 }
-    //             }
-    //         }
-
-    //         callback();
-    //     }
-    // });
+    var info = vi(unityExePath);
+    if (info) {
+        var unityVersion = info['Unity Version'];
+        if (unityVersion) {
+            return unityVersion;
+        } else {
+            let version = info.FileDescription;
+            if (version) {
+                let datas = version.trim().split(' ');
+                if (datas.length > 1) {
+                    return datas[1];
+                }
+            }
+        }
+    }
 }
 function getEditorData(selectPath) {
-    let unityPath = path.join(selectPath, 'Unity.exe');
-    let editorPath = path.join(selectPath, 'Editor', 'Unity.exe');
-    let usePath;
-    if (fs.existsSync(unityPath)) usePath = unityPath;
-    else if (fs.existsSync(editorPath)) usePath = editorPath;
-    if (usePath) {
-        var data = getEditorVersion(editorPath);
-        if (!data) {
-            return;
-        } else {
-            let version = data;
-            return getData(editorPath, version);
+    let unityExePath = path.join(selectPath, 'Unity.exe');
+    let uninstallPath = path.join(selectPath, 'Uninstall.exe');
+    if (fs.existsSync(unityExePath)) {
+        if (fs.existsSync(uninstallPath)) {
+            var version = getEditorVersion(uninstallPath);
+            if (version) {
+                return getData(selectPath, version);
+            }
         }
     }
 }
@@ -69,7 +54,8 @@ function updateAndCheckEditor(event) {
     for (let index = data.length - 1; index >= 0; index--) {
         const element = data[index];
         if (element.path) {
-            var outData = getEditorData(element.path);
+            let dirName = path.dirname(element.path);
+            var outData = getEditorData(dirName);
             if (outData) { // 此编辑器存在 检查版本是否改变
                 if (outData.version != element.version) {
                     element.version = version;
@@ -85,8 +71,51 @@ function updateAndCheckEditor(event) {
 }
 
 ipcMain.on('uninstallEditor-message', (event, arg) => {
-    var path = arg;
-    console.log("TODO Uninstall :" + path);
+    var data = arg;
+    if (!data) return;
+    dialog.showMessageBox(windows, {
+        type: "warning",
+        title: "提示",
+        message: "确定要卸载Unity " + data.version + "吗？",
+        buttons: ["确定", "取消"],
+        noLink: true,
+    }).then((outData) => {
+        if (outData.response == 0) {
+            if (data.path) {
+                let dirName = path.dirname(data.path);
+                let uninstall = path.join(dirName, 'Uninstall.exe');
+                if (fs.existsSync(uninstall)) {
+                    process_utils.runProcess(uninstall);
+                }
+            }
+        }
+    });
+})
+
+ipcMain.on('removeListEditor-message', (event, arg) => {
+    var editorData = arg;
+    if (!editorData) return;
+    dialog.showMessageBox(windows, {
+        type: "warning",
+        title: "提示",
+        message: "确定要移除Unity " + editorData.version + "吗？该版本Unity仍然会保留在计算机内",
+        buttons: ["确定", "取消"],
+        noLink: true,
+    }).then((outData) => {
+        if (outData.response == 0) {
+            var data = store.get('editorDatas')
+            if (!data) data = [];
+            for (let index = data.length - 1; index >= 0; index--) {
+                const element = data[index];
+                if (element.path && element.path == editorData.path) {
+                    data.splice(index, 1);
+                    store.set('editorDatas', data);
+                    event.reply('updateEditors-reply', data);
+                    break;
+                }
+            }
+        }
+    });
 })
 
 ipcMain.on('importEditor-message', (event, arg) => {
@@ -105,13 +134,22 @@ ipcMain.on('importEditor-message', (event, arg) => {
             }
         }
         if (isPush) data.push(editorData);
+        else {
+            dialog.showMessageBox(windows, {
+                type: 'warning',
+                title: '提示',
+                message: 'Unity' + editorData.version + '已存在',
+                buttons: ['确定'],
+                noLink: true,
+            });
+        }
         store.set('editorDatas', data);
         event.reply('updateEditors-reply', data);
     } else {
         dialog.showMessageBox(windows, {
             type: 'warning',
             title: '提示',
-            message: '未检测到Unity.exe, 请检查路径',
+            message: '未检测到Unity.exe或Uninstall.exe, 请检查路径',
             buttons: ['确定'],
             noLink: true,
         });

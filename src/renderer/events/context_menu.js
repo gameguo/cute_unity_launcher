@@ -36,6 +36,7 @@ context_menu.openProjectMenu = function (callback1, callback2) {
 var editorMenu = new Menu();
 
 editorMenu.append(new MenuItem({ label: '打开所在文件夹', click: editorMenu1Click }));
+editorMenu.append(new MenuItem({ label: '从列表中移除', click: editorMenu3Click }));
 editorMenu.append(new MenuItem({ label: '卸载', click: editorMenu2Click }));
 function editorMenu1Click() {
     if (context_menu.editorCallback.callback1) {
@@ -47,10 +48,16 @@ function editorMenu2Click() {
         context_menu.editorCallback.callback2();
     }
 }
-context_menu.openEditorMenu = function (callback1, callback2) {
+function editorMenu3Click() {
+    if (context_menu.editorCallback.callback3) {
+        context_menu.editorCallback.callback3();
+    }
+}
+context_menu.openEditorMenu = function (callback1, callback2, callback3) {
     context_menu.editorCallback = {}
     context_menu.editorCallback.callback1 = callback1;
     context_menu.editorCallback.callback2 = callback2;
+    context_menu.editorCallback.callback3 = callback3;
     editorMenu.popup(remote.getCurrentWindow());
 }
 
