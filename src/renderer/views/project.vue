@@ -140,6 +140,9 @@ export default {
         },
         function () {
           that.project.requestDeleteProject(row);
+        },
+        function () {
+          that.project.requestSelectVersionOpenProject(row);
         }
       );
     },

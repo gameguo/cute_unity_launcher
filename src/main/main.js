@@ -53,7 +53,7 @@ ipcMain.on('selectFolder-message', (event, arg) => {
         defaultPath = undefined;
     }
     dialog.showOpenDialog(windows, {
-        properties: ["openFile", "openDirectory"],
+        properties: ["openDirectory"],
         title: "选择文件夹",
         buttonLabel: "选择文件夹",
         defaultPath: defaultPath,

@@ -36,12 +36,17 @@ function requestCreateProject(projectData) {
     window.ipcRenderer.send('createProject-message', projectData)
 }
 
+function requestSelectVersionOpenProject(projectData) {
+    window.ipcRenderer.send('selectEditorOpenProject-message', projectData);
+}
+
 project.requestProject = requestProject;
 
 project.requestStartProject = requestStartProject;
 project.requestImportProject = requestImportProject;
 project.requestDeleteProject = requestDeleteProject;
 project.requestCreateProject = requestCreateProject;
+project.requestSelectVersionOpenProject = requestSelectVersionOpenProject;
 
 requestProject();
 

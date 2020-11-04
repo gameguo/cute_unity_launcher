@@ -1,4 +1,4 @@
-import { ipcMain, dialog } from 'electron'
+import { ipcMain, dialog, BrowserWindow } from 'electron'
 import registry_win from '../config/registry_win.js'
 import regedit from '../lib/regedit_win.js'
 import utils from '../lib/utils.js'
@@ -90,12 +90,35 @@ function getProjectsAutoReply(event) {
 }
 
 function getUnityExePath(version) {
-    return '';
-    //return 'E:\\DevelopmentSoft\\Unitys\\2017.4.40f1\\Editor\\Unity.exe';
+    let editorDatas = store.get('editorDatas');
+    if (editorDatas) {
+        for (let index = 0; index < editorDatas.length; index++) {
+            const element = editorDatas[index];
+            if (element.version && element.version == version) {
+                return element.path;
+            }
+        }
+    }
 }
 
-function openProjectAuto(projectData) {
-    let unityPath = getUnityExePath(projectData.projectVersion);
+function selectEditorOpenProject(projectData, event) {
+    let editorWindow = new BrowserWindow({
+        backgroundColor: "#ffffff",
+        width: 400,
+        height: 300,
+        "center": true,
+        "minWidth": 300,//窗口的最小宽度，单位: 像素值,
+        "minHeight": 200,//窗口的最小高度，单位: 像素值,
+        "title": "选择编辑器版本",
+        "parent": windows,
+        "modal": true,
+    })
+    editorWindow.setMenu(null)
+
+}
+
+function openProjectForVersion(projectData, version, event) {
+    let unityPath = getUnityExePath(version);
     if (!unityPath) {
         dialog.showMessageBox(windows, {
             title: "提示",
@@ -104,10 +127,16 @@ function openProjectAuto(projectData) {
             noLink: true,
             type: "info",
             cancelId: 0,
-        })
-        return false;
+        }).then((data) => {
+            if (data.response == 1) { // 使用其他版本编辑器打开
+                selectEditorOpenProject(projectData, event);
+            }
+        });
+        return;
     }
-    return openProject(projectData, unityPath);
+    if (!openProject(projectData, unityPath)) {
+        getProjectsAutoReply(event);
+    }
 }
 
 function openProject(projectData, editorPath) {
@@ -122,7 +151,6 @@ function openProject(projectData, editorPath) {
             type: "info",
             cancelId: 0,
         })
-
         return false;
     }
     var lockFile = path.join(projectData.projectPath, "Temp", "UnityLockfile");
@@ -185,14 +213,17 @@ ipcMain.on('getProjects-message', (event, arg) => {
 
 ipcMain.on('startProject-message', (event, arg) => {
     let projectData = arg;
-    if (!openProjectAuto(projectData)) {
-        getProjectsAutoReply(event);
-    }
+    openProjectForVersion(projectData, projectData.projectVersion, event)
+})
+
+ipcMain.on('selectEditorOpenProject-message', (event, arg) => {
+    let projectData = arg;
+    selectEditorOpenProject(projectData, event);
 })
 
 ipcMain.on('importProject-message', (event, arg) => {
     dialog.showOpenDialog(windows, {
-        properties: ["openFile", "openDirectory"],
+        properties: ["openDirectory"],
         title: "选择项目",
         buttonLabel: "选择项目",
     }).then((data) => {
@@ -214,7 +245,7 @@ ipcMain.on('importProject-message', (event, arg) => {
                 return;
             }
             var projectData = getProjectData(selectpPath, null);
-            openProjectAuto(projectData);
+            selectEditorOpenProject(projectData, event);
         }
     });
 })

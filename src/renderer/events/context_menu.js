@@ -11,7 +11,8 @@ var projectMenu = new Menu();
 var projectEditorMenu = new Menu();
 
 projectMenu.append(new MenuItem({ label: '打开所在文件夹', click: projectMenu1Click }));
-projectMenu.append(new MenuItem({ type: 'submenu', submenu: projectEditorMenu, label: '用其他版本编辑器打开' }));
+// projectMenu.append(new MenuItem({ type: 'submenu', submenu: projectEditorMenu, label: '用其他版本编辑器打开' }));
+projectMenu.append(new MenuItem({ label: '用其他版本编辑器打开', click: projectMenu3Click }));
 projectMenu.append(new MenuItem({ type: 'separator' }));
 projectMenu.append(new MenuItem({ label: '从列表中移除', click: projectMenu2Click }));
 
@@ -25,11 +26,17 @@ function projectMenu2Click() {
         context_menu.projectCallback.callback2();
     }
 }
+function projectMenu3Click() {
+    if (context_menu.projectCallback.callback3) {
+        context_menu.projectCallback.callback3();
+    }
+}
 
-context_menu.openProjectMenu = function (callback1, callback2) {
+context_menu.openProjectMenu = function (callback1, callback2, callback3) {
     context_menu.projectCallback = {}
     context_menu.projectCallback.callback1 = callback1;
     context_menu.projectCallback.callback2 = callback2;
+    context_menu.projectCallback.callback3 = callback3;
     projectMenu.popup(remote.getCurrentWindow());
 }
 
